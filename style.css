@@ -13,6 +13,32 @@
     --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
     --text-main: #ffffff;
     --text-muted: #cbd5e1;
+    --input-bg: rgba(0,0,0,0.3);
+    --input-border: rgba(255,255,255,0.2);
+    --input-text: #ffffff;
+}
+
+body.light-mode {
+    --primary: #0096c7;
+    --primary-dark: #0077b6;
+    --secondary: #ff3366;
+    --success: #00c853;
+    --warning: #ffb300;
+    --danger: #d50000;
+    --bg-dark: #f1f5f9;
+    --glass-bg: rgba(255, 255, 255, 0.6);
+    --glass-border: rgba(0, 0, 0, 0.1);
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --input-bg: rgba(255,255,255,0.6);
+    --input-border: rgba(0,0,0,0.2);
+    --input-text: #1e293b;
+}
+
+body.light-mode .bg-animated {
+    background: linear-gradient(-45deg, #f1f5f9, #e2e8f0, #cbd5e1, #e0f2fe);
+    background-size: 400% 400%;
 }
 
 * {
@@ -104,7 +130,7 @@ body {
     border-radius: 20px;
     cursor: pointer;
     border: none;
-    color: white;
+    color: #ffffff;
     font-weight: 700;
     width: 90%;
     max-width: 350px;
@@ -310,9 +336,9 @@ body {
     width: 100%;
     max-width: 300px;
     text-align: center;
-    background: rgba(255,255,255,0.1);
-    border: 2px solid rgba(255,255,255,0.2);
-    color: white;
+    background: var(--glass-bg);
+    border: 2px solid var(--glass-border);
+    color: var(--text-main);
     border-radius: 12px;
     margin-bottom: 20px;
     outline: none;
@@ -326,7 +352,7 @@ body {
     font-size: 1.2rem;
     padding: 15px 40px;
     background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-    color: white;
+    color: #ffffff;
     border: none;
     border-radius: 12px;
     cursor: pointer;
@@ -352,9 +378,9 @@ body {
 }
 
 .count-selector {
-    background: rgba(255,255,255,0.1);
-    color: white;
-    border: 2px solid rgba(255,255,255,0.2);
+    background: var(--glass-bg);
+    color: var(--text-main);
+    border: 2px solid var(--glass-border);
     font-size: 1.1rem;
     padding: 10px 20px;
     border-radius: 8px;
@@ -362,7 +388,7 @@ body {
     font-family: 'Outfit', sans-serif;
 }
 
-.count-selector option { background: var(--bg-dark); color: white; }
+.count-selector option { background: var(--bg-dark); color: var(--text-main); }
 
 .btn-action {
     padding: 12px 20px;
@@ -371,7 +397,7 @@ body {
     border-radius: 8px;
     cursor: pointer;
     font-weight: 700;
-    color: white;
+    color: #ffffff;
     transition: transform 0.1s;
     font-family: 'Outfit', 'Noto Sans JP', sans-serif;
 }
@@ -418,9 +444,9 @@ body {
     font-size: 1.2rem;
     padding: 10px;
     flex-grow: 1;
-    background: rgba(0,0,0,0.3);
-    border: 1px solid rgba(255,255,255,0.2);
-    color: white;
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    color: var(--input-text);
     border-radius: 8px;
     font-weight: 700;
     outline: none;
@@ -428,7 +454,7 @@ body {
 .p-title input[type="text"]:focus { border-color: var(--primary); }
 
 .btn-big {
-    color: white;
+    color: #ffffff;
     border: none;
     padding: 15px;
     font-size: 1.3rem;
@@ -447,7 +473,7 @@ body {
 .score-adjuster {
     display: flex;
     align-items: center;
-    background: rgba(0,0,0,0.3);
+    background: var(--input-bg);
     border-radius: 8px;
     padding: 5px;
 }
@@ -457,14 +483,14 @@ body {
     height: 35px;
     font-size: 1.2rem;
     font-weight: bold;
-    background: rgba(255,255,255,0.1);
-    color: white;
+    background: var(--glass-bg);
+    color: var(--input-text);
     border: none;
     border-radius: 6px;
     transition: background 0.2s;
 }
-.step-btn:hover { background: rgba(255,255,255,0.2); }
-.step-btn:active { background: rgba(255,255,255,0.3); }
+.step-btn:hover { background: var(--glass-border); }
+.step-btn:active { background: rgba(128,128,128,0.3); }
 .score-disp {
     display: inline-block;
     width: 40px;
@@ -478,13 +504,13 @@ body {
     font-size: 1.1rem;
     padding: 8px 12px;
     border-radius: 8px;
-    border: 1px solid rgba(255,255,255,0.2);
+    border: 1px solid var(--glass-border);
     background: var(--bg-dark);
-    color: white;
+    color: var(--text-main);
     width: 130px;
     outline: none;
 }
-.s-select option { background: var(--bg-dark); }
+.s-select option { background: var(--bg-dark); color: var(--text-main); }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {

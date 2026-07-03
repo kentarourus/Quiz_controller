@@ -1,6 +1,7 @@
 let peer;
 let conn;
 let connections = [];
+let quizTitle = "クイズ大会";
 let gameState = Array.from({ length: 8 }, (_, i) => ({
     id: i, 
     name: `Player ${i + 1}`, 
@@ -139,6 +140,10 @@ function startDisplayMode() {
                 } else if (data.type === 'resetAll') {
                     gameState = gameState.map(p => ({ ...p, score: 0, penalty: 0, status: 'active' }));
                     broadcastState();
+                } else if (data.type === 'updateTitle') {
+                    quizTitle = data.title;
+                    document.getElementById('display-quiz-title').innerText = quizTitle;
+                    broadcastState();
                 }
             });
         });
@@ -150,7 +155,7 @@ function startDisplayMode() {
 
 function broadcastState() {
     renderBoard();
-    connections.forEach(c => { if (c.open) c.send({ type: 'sync', state: gameState }); });
+    connections.forEach(c => { if (c.open) c.send({ type: 'sync', state: gameState, title: quizTitle }); });
 }
 
 function renderBoard() {
@@ -235,6 +240,10 @@ function connectToDisplay() {
     conn.on('data', (data) => {
         if (data.type === 'sync') {
             gameState = data.state;
+            if (data.title !== undefined) {
+                const titleInput = document.getElementById('quiz-title-input');
+                if (titleInput && titleInput.value !== data.title) titleInput.value = data.title;
+            }
             renderControls();
             const activeCount = gameState.filter(p => p.active).length;
             const bulkSelect = document.getElementById('bulk-count');
@@ -299,6 +308,22 @@ function renderControls() {
 function updatePlayer(idx, key, val) {
     gameState[idx][key] = val;
     if (conn && conn.open) conn.send({ type: 'updatePlayer', player: gameState[idx] });
+}
+
+function updateQuizTitle(title) {
+    if (conn && conn.open) {
+        conn.send({ type: 'updateTitle', title: title });
+    }
+}
+
+function toggleTheme() {
+    document.body.classList.toggle('light-mode');
+    const btn = document.getElementById('theme-toggle');
+    if (document.body.classList.contains('light-mode')) {
+        btn.innerText = '🌙';
+    } else {
+        btn.innerText = '🌞';
+    }
 }
 
 function sendAction(type, sound = null) {

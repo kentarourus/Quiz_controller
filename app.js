@@ -91,7 +91,8 @@ function startDisplayMode() {
             document.getElementById('peer-id').innerText = id;
             
             // Generate QR Code
-            const controllerUrl = window.location.origin + window.location.pathname + '?role=controller&id=' + id;
+            const baseUrl = window.location.href.split('?')[0].split('#')[0];
+            const controllerUrl = baseUrl + '?role=controller&id=' + id;
             document.getElementById('qrcode').innerHTML = ''; // Clear loading text
             new QRCode(document.getElementById("qrcode"), {
                 text: controllerUrl,

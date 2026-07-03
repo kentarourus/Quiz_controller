@@ -6,6 +6,7 @@
     <title>Quiz Controller - クイズ大会システム</title>
     <!-- Include PeerJS for WebRTC Communication -->
     <script src="https://unpkg.com/peerjs@1.5.1/dist/peerjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <!-- Include Custom Stylesheet -->
     <link rel="stylesheet" href="style.css">
 </head>
@@ -27,8 +28,18 @@
 
     <!-- Display Mode (Projector Screen) -->
     <div id="display-mode">
-        <div class="header-display glass" id="setup-header">
-            操作画面でこのIDを入力: <strong id="peer-id">取得中...</strong>
+        <div class="header-display glass" id="setup-header" style="display: flex; justify-content: center; align-items: center; gap: 30px; text-align: left;">
+            <div>
+                <div style="font-size: 1rem; color: var(--text-muted); margin-bottom: 5px; font-weight: normal; letter-spacing: 0;">操作画面でこのIDを入力</div>
+                <strong id="peer-id" style="font-size: 3.5rem; letter-spacing: 5px; color: var(--success); margin: 0; line-height: 1;">---</strong>
+            </div>
+            <div style="border-left: 2px solid var(--glass-border); height: 80px;"></div>
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <div style="font-size: 1rem; color: var(--text-muted); line-height: 1.4; font-weight: normal; letter-spacing: 0;">スマホのカメラで<br>スキャンして接続</div>
+                <div id="qrcode" style="background: white; padding: 8px; border-radius: 8px; display: flex; align-items: center; justify-content: center; min-width: 100px; min-height: 100px;">
+                    <span style="color: #ccc; font-size: 0.8rem;">生成中...</span>
+                </div>
+            </div>
         </div>
         <div class="board" id="board">
             <!-- Player cards will be injected here dynamically -->
@@ -39,7 +50,7 @@
     <div id="controller-mode">
         <div class="setup-area glass" id="setup">
             <h2>表示画面のIDを入力して接続</h2>
-            <input type="text" id="target-id" placeholder="IDを入力" autocomplete="off" autocorrect="off" autocapitalize="off">
+            <input type="tel" id="target-id" placeholder="6桁のID" autocomplete="off" autocorrect="off" autocapitalize="off" maxlength="6">
             <br>
             <button onclick="connectToDisplay()">接続する</button>
             <p id="status-msg" style="color:var(--danger); font-weight:bold; margin-top:15px; font-size:1.1rem;"></p>

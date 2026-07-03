@@ -79,40 +79,72 @@ function startDisplayMode() {
     document.body.appendChild(blob1);
     document.body.appendChild(blob2);
 
-    peer = new Peer();
-    peer.on('open', (id) => document.getElementById('peer-id').innerText = id);
-    peer.on('connection', (c) => {
-        connections.push(c);
-        document.getElementById('setup-header').style.display = 'none';
+    function generatePin() {
+        return Math.floor(100000 + Math.random() * 900000).toString();
+    }
+
+    function initPeer(pin) {
+        peer = new Peer(pin);
         
-        c.on('open', () => c.send({ type: 'sync', state: gameState }));
-        
-        c.on('data', (data) => {
-            if (data.type === 'updatePlayer') {
-                const idx = gameState.findIndex(p => p.id === data.player.id);
-                if (idx !== -1) {
-                    // Detect if score changed to add animation class
-                    if (gameState[idx].score !== data.player.score) {
-                        triggerScoreAnimation(data.player.id, 'score');
-                    }
-                    if (gameState[idx].penalty !== data.player.penalty) {
-                        triggerScoreAnimation(data.player.id, 'penalty');
-                    }
-                    gameState[idx] = data.player;
-                }
-                broadcastState();
-            } else if (data.type === 'updateBulkActive') {
-                gameState.forEach((p, i) => p.active = i < data.count);
-                broadcastState();
-            } else if (data.type === 'playSound') {
-                if (data.sound === 'maru') playMaru();
-                if (data.sound === 'batsu') playBatsu();
-            } else if (data.type === 'resetAll') {
-                gameState = gameState.map(p => ({ ...p, score: 0, penalty: 0, status: 'active' }));
-                broadcastState();
+        peer.on('open', (id) => {
+            document.getElementById('peer-id').innerText = id;
+            
+            // Generate QR Code
+            const controllerUrl = window.location.origin + window.location.pathname + '?role=controller&id=' + id;
+            document.getElementById('qrcode').innerHTML = ''; // Clear loading text
+            new QRCode(document.getElementById("qrcode"), {
+                text: controllerUrl,
+                width: 100,
+                height: 100,
+                colorDark : "#000000",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.L
+            });
+        });
+
+        peer.on('error', (err) => {
+            if (err.type === 'unavailable-id') {
+                initPeer(generatePin()); // Retry with a new PIN if taken
+            } else {
+                console.error(err);
             }
         });
-    });
+
+        peer.on('connection', (c) => {
+            connections.push(c);
+            document.getElementById('setup-header').style.display = 'none';
+            
+            c.on('open', () => c.send({ type: 'sync', state: gameState }));
+            
+            c.on('data', (data) => {
+                if (data.type === 'updatePlayer') {
+                    const idx = gameState.findIndex(p => p.id === data.player.id);
+                    if (idx !== -1) {
+                        // Detect if score changed to add animation class
+                        if (gameState[idx].score !== data.player.score) {
+                            triggerScoreAnimation(data.player.id, 'score');
+                        }
+                        if (gameState[idx].penalty !== data.player.penalty) {
+                            triggerScoreAnimation(data.player.id, 'penalty');
+                        }
+                        gameState[idx] = data.player;
+                    }
+                    broadcastState();
+                } else if (data.type === 'updateBulkActive') {
+                    gameState.forEach((p, i) => p.active = i < data.count);
+                    broadcastState();
+                } else if (data.type === 'playSound') {
+                    if (data.sound === 'maru') playMaru();
+                    if (data.sound === 'batsu') playBatsu();
+                } else if (data.type === 'resetAll') {
+                    gameState = gameState.map(p => ({ ...p, score: 0, penalty: 0, status: 'active' }));
+                    broadcastState();
+                }
+            });
+        });
+    }
+
+    initPeer(generatePin());
     renderBoard();
 }
 
@@ -175,10 +207,17 @@ function triggerScoreAnimation(playerId, type) {
 }
 
 // --- Controller Mode ---
-function startControllerMode() {
+function startControllerMode(autoConnectId = null) {
     document.getElementById('mode-selection').style.display = 'none';
     document.getElementById('controller-mode').style.display = 'block';
     peer = new Peer();
+    
+    if (autoConnectId) {
+        document.getElementById('target-id').value = autoConnectId;
+        peer.on('open', () => {
+            connectToDisplay();
+        });
+    }
 }
 
 function connectToDisplay() {
@@ -266,3 +305,13 @@ function sendAction(type, sound = null) {
     if (type === 'resetAll' && !confirm('全員のスコアと状態をリセットしますか？')) return;
     if (conn && conn.open) conn.send({ type, sound });
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const role = urlParams.get('role');
+    const id = urlParams.get('id');
+    
+    if (role === 'controller') {
+        startControllerMode(id);
+    }
+});

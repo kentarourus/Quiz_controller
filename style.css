@@ -21,6 +21,12 @@
     --title-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
     --score-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
     --hover-bg: rgba(255, 255, 255, 0.1);
+    --bg-grad-1: #0f172a;
+    --bg-grad-2: #1e1b4b;
+    --bg-grad-3: #312e81;
+    --bg-grad-4: #1e3a8a;
+    --blob-1: rgba(0, 229, 255, 0.3);
+    --blob-2: rgba(255, 51, 102, 0.2);
 }
 
 body.light-mode {
@@ -44,12 +50,15 @@ body.light-mode {
     --title-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     --score-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     --hover-bg: rgba(0, 0, 0, 0.05);
+    --bg-grad-1: #f1f5f9;
+    --bg-grad-2: #e0f2fe;
+    --bg-grad-3: #bae6fd;
+    --bg-grad-4: #e2e8f0;
+    --blob-1: rgba(2, 132, 199, 0.2);
+    --blob-2: rgba(225, 29, 72, 0.15);
 }
 
-body.light-mode .bg-animated {
-    background: linear-gradient(-45deg, #f1f5f9, #e2e8f0, #cbd5e1, #e0f2fe);
-    background-size: 400% 400%;
-}
+
 
 * {
     box-sizing: border-box;
@@ -67,7 +76,7 @@ body {
 
 /* Dynamic Animated Background for Display Mode */
 .bg-animated {
-    background: linear-gradient(-45deg, #0f172a, #1e1b4b, #312e81, #1e3a8a);
+    background: linear-gradient(-45deg, var(--bg-grad-1), var(--bg-grad-2), var(--bg-grad-3), var(--bg-grad-4));
     background-size: 400% 400%;
     animation: gradientBG 15s ease infinite;
 }
@@ -86,8 +95,8 @@ body {
     opacity: 0.6;
     animation: floatBlob 10s infinite alternate ease-in-out;
 }
-.blob-1 { top: -10%; left: -10%; width: 40vw; height: 40vw; background: rgba(0, 229, 255, 0.3); border-radius: 50%; }
-.blob-2 { bottom: -10%; right: -10%; width: 50vw; height: 50vw; background: rgba(255, 51, 102, 0.2); border-radius: 50%; animation-delay: -5s; }
+.blob-1 { top: -10%; left: -10%; width: 40vw; height: 40vw; background: var(--blob-1); border-radius: 50%; }
+.blob-2 { bottom: -10%; right: -10%; width: 50vw; height: 50vw; background: var(--blob-2); border-radius: 50%; animation-delay: -5s; }
 
 @keyframes floatBlob {
     0% { transform: translate(0, 0) scale(1); }

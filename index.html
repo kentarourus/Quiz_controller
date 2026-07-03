@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>クイズ大会システム</title>
+    <script src="https://unpkg.com/peerjs@1.5.1/dist/peerjs.min.js"></script>
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; margin: 0; padding: 0; background: #333; transition: background 0.5s; }
+        
+        /* モード選択画面 */
+        #mode-selection { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; color: white; text-align: center; }
+        .btn-mode { font-size: 1.5em; padding: 25px 40px; margin: 15px; border-radius: 12px; cursor: pointer; border: none; color: white; font-weight: bold; width: 90%; max-width: 400px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); transition: transform 0.2s; }
+        .btn-mode:active { transform: scale(0.95); }
+        .btn-display { background: #007aff; }
+        .btn-controller { background: #ff3b30; }
+
+        /* 表示画面 (Display) */
+        #display-mode { display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+        .header { background: rgba(255,255,255,0.9); padding: 15px 30px; border-radius: 15px; margin-bottom: 20px; border: 2px solid #007aff; font-size: 1.3em; color: #333;}
+        .board { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; width: 100%; max-width: 1600px; }
+        .player-card { background: white; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); width: calc(25% - 20px); min-width: 280px; padding: 25px; text-align: center; position: relative; overflow: hidden; transition: all 0.3s; color: #333;}
+        .player-name { font-size: 2.3em; font-weight: bold; margin-bottom: 15px; }
+        .score-area { display: flex; justify-content: space-around; align-items: center; }
+        .score-box { text-align: center; width: 45%; }
+        .score-label { font-size: 1.3em; color: #666; font-weight: bold; }
+        .score-val { font-size: 4.5em; font-weight: bold; line-height: 1; }
+        .maru { color: #ff3b30; } .batsu { color: #007aff; }
+        .win { background: #fffdf0; border: 5px solid #ffcc00; transform: scale(1.02); }
+        .win::after { content: "WINNER!"; position: absolute; top: 20px; right: -35px; background: #ffcc00; color: white; padding: 5px 40px; transform: rotate(45deg); font-weight: bold; }
+        .eliminated { background: #e0e0e0; filter: grayscale(100%); opacity: 0.6; }
+        .eliminated::after { content: "脱落"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #cc0000; font-size: 4.5em; border: 8px solid #cc0000; padding: 5px 15px; border-radius: 15px; background: rgba(255,255,255,0.8); font-weight: bold; }
+
+        /* 操作画面 (Controller) */
+        #controller-mode { display: none; padding: 15px; max-width: 1000px; margin: 0 auto; color: #333;}
+        .setup-area { background: white; padding: 30px 20px; border-radius: 15px; text-align: center; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .setup-area input { font-size: 1.4em; padding: 12px; width: 100%; max-width: 260px; text-align: center; border: 2px solid #ddd; border-radius: 8px; margin-bottom: 15px; }
+        .setup-area button { font-size: 1.2em; padding: 12px 30px; background: #007aff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .global-controls { background: white; padding: 20px; border-radius: 15px; margin-bottom: 20px; display: none; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .control-row { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 15px; align-items: center; }
+        .count-selector { font-size: 1.1em; padding: 8px 15px; border-radius: 6px; border: 2px solid #007aff; color: #007aff; font-weight: bold; }
+        .btn-action { padding: 10px 15px; font-size: 1em; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; color: white; }
+        .btn-reset { background: #ff3b30; } .btn-sound-m { background: #34c759; } .btn-sound-b { background: #ff9500; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px; display: none; }
+        .control-card { background: white; padding: 15px; border-radius: 12px; border-left: 5px solid #ccc; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .active-player { border-left-color: #34c759; }
+        .c-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 8px; }
+        .p-title { display: flex; align-items: center; gap: 5px; width: 100%; }
+        .p-title input { font-size: 1.1em; padding: 6px; flex-grow: 1; border: 1px solid #ddd; border-radius: 4px; font-weight: bold; width: 100%; }
+        .c-btn-m { background: #ff3b30; color: white; border: none; padding: 12px; font-size: 1.1em; border-radius: 6px; cursor: pointer; width: 48%; font-weight: bold; }
+        .c-btn-b { background: #007aff; color: white; border: none; padding: 12px; font-size: 1.1em; border-radius: 6px; cursor: pointer; width: 48%; font-weight: bold; }
+        .step-btn { cursor: pointer; padding: 4px 10px; font-size: 1.1em; font-weight: bold; background: #e5e5ea; border: none; border-radius: 4px; }
+        .score-disp { display: inline-block; width: 25px; text-align: center; font-weight: bold; font-size: 1.2em; }
+        .s-select { font-size: 1em; padding: 5px; border-radius: 4px; border: 1px solid #ddd; width: 110px; }
+    </style>
+</head>
+<body>
+
+    <div id="mode-selection">
+        <h1>🏆 クイズ大会システム</h1>
+        <p>この端末の役割を選んでください</p>
+        <button class="btn-mode btn-display" onclick="startDisplayMode()">📺 プロジェクター用<br><small style="font-size: 0.6em;">(スコアボードを表示)</small></button>
+        <button class="btn-mode btn-controller" onclick="startControllerMode()">📱 スマホ操作用<br><small style="font-size: 0.6em;">(コントローラーを表示)</small></button>
+    </div>
+
+    <div id="display-mode">
+        <div class="header" id="setup-header">
+            操作画面でこのIDを入力: <strong id="peer-id" style="color:#ff3b30; font-size:1.4em;">取得中...</strong>
+        </div>
+        <div class="board" id="board"></div>
+    </div>
+
+    <div id="controller-mode">
+        <div class="setup-area" id="setup">
+            <h2>表示画面のIDを入力して接続</h2>
+            <input type="text" id="target-id" placeholder="IDを入力">
+            <br><button onclick="connectToDisplay()">接続する</button>
+            <p id="status-msg" style="color:#ff3b30; font-weight:bold; margin-top:10px;"></p>
+        </div>
+
+        <div class="global-controls" id="global-controls">
+            <div class="control-row">
+                <label style="font-weight:bold;">👤 表示人数:</label>
+                <select id="bulk-count" class="count-selector" onchange="changePlayerCount(this.value)">
+                    <option value="2">2人</option><option value="3">3人</option><option value="4" selected>4人</option>
+                    <option value="5">5人</option><option value="6">6人</option><option value="7">7人</option><option value="8">8人</option>
+                </select>
+                <button class="btn-action btn-sound-m" onclick="sendAction('playSound', 'maru')">🔊 ピンポン</button>
+                <button class="btn-action btn-sound-b" onclick="sendAction('playSound', 'batsu')">🔊 ブー</button>
+                <button class="btn-action btn-reset" onclick="sendAction('resetAll')">🔄 リセット</button>
+            </div>
+        </div>
+
+        <div class="grid" id="controls"></div>
+    </div>
+
+    <script>
+        let peer; let conn; let connections = [];
+        let gameState = Array.from({ length: 8 }, (_, i) => ({
+            id: i, name: `Player ${i + 1}`, score: 0, penalty: 0, status: 'active', active: i < 4
+        }));
+        let audioCtx;
+
+        function initAudio() {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+        }
+
+        function startDisplayMode() {
+            initAudio();
+            document.getElementById('mode-selection').style.display = 'none';
+            document.getElementById('display-mode').style.display = 'flex';
+            document.body.style.background = 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)';
+
+            peer = new Peer();
+            peer.on('open', (id) => document.getElementById('peer-id').innerText = id);
+            peer.on('connection', (c) => {
+                connections.push(c);
+                document.getElementById('setup-header').style.display = 'none';
+                c.on('open', () => c.send({ type: 'sync', state: gameState }));
+                c.on('data', (data) => {
+                    if (data.type === 'updatePlayer') {
+                        const idx = gameState.findIndex(p => p.id === data.player.id);
+                        if (idx !== -1) gameState[idx] = data.player;
+                        broadcastState();
+                    } else if (data.type === 'updateBulkActive') {
+                        gameState.forEach((p, i) => p.active = i < data.count);
+                        broadcastState();
+                    } else if (data.type === 'playSound') {
+                        if (data.sound === 'maru') playMaru();
+                        if (data.sound === 'batsu') playBatsu();
+                    } else if (data.type === 'resetAll') {
+                        gameState = gameState.map(p => ({ ...p, score: 0, penalty: 0, status: 'active' }));
+                        broadcastState();
+                    }
+                });
+            });
+            renderBoard();
+        }
+
+        function broadcastState() {
+            renderBoard();
+            connections.forEach(c => { if (c.open) c.send({ type: 'sync', state: gameState }); });
+        }
+
+        function renderBoard() {
+            const board = document.getElementById('board');
+            board.innerHTML = '';
+            gameState.filter(p => p.active).forEach(p => {
+                const card = document.createElement('div');
+                card.className = `player-card ${p.status}`;
+                card.innerHTML = `
+                    <div class="player-name">${p.name}</div>
+                    <div class="score-area">
+                        <div class="score-box"><div class="score-label">〇</div><div class="score-val maru">${p.score}</div></div>
+                        <div class="score-box"><div class="score-label">✕</div><div class="score-val batsu">${p.penalty}</div></div>
+                    </div>`;
+                board.appendChild(card);
+            });
+        }
+
+        function playMaru() {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.type = 'sine'; osc.frequency.setValueAtTime(880, audioCtx.currentTime); osc.frequency.setValueAtTime(1046.50, audioCtx.currentTime + 0.1);
+            gain.gain.setValueAtTime(0.4, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.5);
+        }
+
+        function playBatsu() {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.type = 'sawtooth'; osc.frequency.setValueAtTime(140, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.3, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.4);
+        }
+
+        function startControllerMode() {
+            document.getElementById('mode-selection').style.display = 'none';
+            document.getElementById('controller-mode').style.display = 'block';
+            document.body.style.background = '#f0f2f5';
+            peer = new Peer();
+        }
+
+        function connectToDisplay() {
+            const targetId = document.getElementById('target-id').value.trim();
+            if (!targetId) return;
+            document.getElementById('status-msg').innerText = "接続中...";
+            conn = peer.connect(targetId);
+
+            conn.on('open', () => {
+                document.getElementById('setup').style.display = 'none';
+                document.getElementById('global-controls').style.display = 'block';
+                document.getElementById('controls').style.display = 'grid';
+            });
+            conn.on('data', (data) => {
+                if (data.type === 'sync') {
+                    gameState = data.state;
+                    renderControls();
+                    const activeCount = gameState.filter(p => p.active).length;
+                    const bulkSelect = document.getElementById('bulk-count');
+                    if (bulkSelect && bulkSelect.value != activeCount) bulkSelect.value = activeCount;
+                }
+            });
+            conn.on('error', () => { document.getElementById('status-msg').innerText = "接続失敗。IDを確認してください。"; });
+        }
+
+        function changePlayerCount(count) { if (conn && conn.open) conn.send({ type: 'updateBulkActive', count: parseInt(count, 10) }); }
+        
+        function renderControls() {
+            const container = document.getElementById('controls');
+            container.innerHTML = '';
+            gameState.forEach((p, i) => {
+                const div = document.createElement('div');
+                div.className = `control-card ${p.active ? 'active-player' : ''}`;
+                div.innerHTML = `
+                    <div class="c-row"><div class="p-title"><label><input type="checkbox" onchange="updatePlayer(${i}, 'active', this.checked)" ${p.active ? 'checked' : ''}>表示</label> <input type="text" value="${p.name}" onchange="updatePlayer(${i}, 'name', this.value)"></div></div>
+                    <div class="c-row"><button class="c-btn-m" onclick="sendAction('playSound','maru'); updatePlayer(${i},'score',${p.score+1})">〇 正解</button> <button class="c-btn-b" onclick="sendAction('playSound','batsu'); updatePlayer(${i},'penalty',${p.penalty+1})">✕ 誤答</button></div>
+                    <div class="c-row">
+                        <div>〇: <button class="step-btn" onclick="updatePlayer(${i},'score',${p.score-1})">-</button> <span class="score-disp">${p.score}</span> <button class="step-btn" onclick="updatePlayer(${i},'score',${p.score+1})">+</button></div>
+                        <div>✕: <button class="step-btn" onclick="updatePlayer(${i},'penalty',${p.penalty-1})">-</button> <span class="score-disp">${p.penalty}</span> <button class="step-btn" onclick="updatePlayer(${i},'penalty',${p.penalty+1})">+</button></div>
+                    </div>
+                    <div class="c-row"><span>状態:</span> <select class="s-select" onchange="updatePlayer(${i}, 'status', this.value)"><option value="active" ${p.status === 'active' ? 'selected' : ''}>通常</option><option value="win" ${p.status === 'win' ? 'selected' : ''}>勝ち抜け</option><option value="eliminated" ${p.status === 'eliminated' ? 'selected' : ''}>脱落</option></select></div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function updatePlayer(idx, key, val) {
+            gameState[idx][key] = val;
+            if (conn && conn.open) conn.send({ type: 'updatePlayer', player: gameState[idx] });
+        }
+        function sendAction(type, sound = null) {
+            if (type === 'resetAll' && !confirm('全員リセットしますか？')) return;
+            if (conn && conn.open) conn.send({ type, sound });
+        }
+    </script>
+</body>
+</html>

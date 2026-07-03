@@ -23,8 +23,10 @@ function playMaru() {
     if (!audioCtx) return;
     if (audioCtx.state === 'suspended') audioCtx.resume();
     
-    // Play a bright "ding-dong" sound
-    const playNote = (freq, startTime, duration) => {
+    const now = audioCtx.currentTime;
+    
+    // Play a classic "Pin-Pon!" chime (E6 -> C6)
+    const playChime = (freq, startTime) => {
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.connect(gain);
@@ -33,38 +35,57 @@ function playMaru() {
         osc.type = 'sine';
         osc.frequency.setValueAtTime(freq, startTime);
         
+        // Smooth attack and long, bell-like decay
         gain.gain.setValueAtTime(0, startTime);
-        gain.gain.linearRampToValueAtTime(0.5, startTime + 0.05);
-        gain.gain.exponentialRampToValueAtTime(0.01, startTime + duration);
+        gain.gain.linearRampToValueAtTime(0.6, startTime + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.001, startTime + 1.5);
         
         osc.start(startTime);
-        osc.stop(startTime + duration);
+        osc.stop(startTime + 1.5);
     };
 
-    const now = audioCtx.currentTime;
-    playNote(783.99, now, 0.4); // G5
-    playNote(1046.50, now + 0.15, 0.6); // C6
+    playChime(1318.51, now);        // E6 (Pin)
+    playChime(1046.50, now + 0.3);  // C6 (Pon)
 }
 
 function playBatsu() {
     if (!audioCtx) return;
     if (audioCtx.state === 'suspended') audioCtx.resume();
     
-    // Play a buzzer sound
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
+    const now = audioCtx.currentTime;
     
-    osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(150, audioCtx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.3);
-    
-    gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
-    
-    osc.start();
-    osc.stop(audioCtx.currentTime + 0.5);
+    // Play a classic "Bu-Buu!" double buzzer
+    const playBuzzer = (startTime, duration) => {
+        const osc1 = audioCtx.createOscillator();
+        const osc2 = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        
+        osc1.connect(gain);
+        osc2.connect(gain);
+        gain.connect(audioCtx.destination);
+        
+        // Mix sawtooth and square for a rich, harsh buzzer texture
+        osc1.type = 'sawtooth';
+        osc2.type = 'square';
+        
+        // Slightly detuned low notes for a dissonant feel
+        osc1.frequency.setValueAtTime(140, startTime);
+        osc2.frequency.setValueAtTime(145, startTime);
+        
+        // Sharp attack, abrupt release
+        gain.gain.setValueAtTime(0, startTime);
+        gain.gain.linearRampToValueAtTime(0.3, startTime + 0.02);
+        gain.gain.setValueAtTime(0.3, startTime + duration - 0.02);
+        gain.gain.linearRampToValueAtTime(0, startTime + duration);
+        
+        osc1.start(startTime);
+        osc2.start(startTime);
+        osc1.stop(startTime + duration);
+        osc2.stop(startTime + duration);
+    };
+
+    playBuzzer(now, 0.15);         // Bu
+    playBuzzer(now + 0.25, 0.4);   // Buu!
 }
 
 // --- Display Mode ---

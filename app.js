@@ -278,7 +278,7 @@ function renderControls() {
                 <button class="btn-big c-btn-m" onclick="sendAction('playSound','maru'); updatePlayer(${i},'score',${p.score+1})">〇 正解</button> 
                 <button class="btn-big c-btn-b" onclick="sendAction('playSound','batsu'); updatePlayer(${i},'penalty',${p.penalty+1})">✕ 誤答</button>
             </div>
-            <div class="c-row" style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 10px;">
+            <div class="c-row" style="background: var(--panel-bg); padding: 12px; border-radius: 12px; border: 1px solid var(--glass-border);">
                 <div class="score-adjuster">
                     <span style="margin-right: 10px; font-weight: bold; color: var(--success);">〇:</span>
                     <button class="step-btn" onclick="updatePlayer(${i},'score',${p.score-1})">-</button> 

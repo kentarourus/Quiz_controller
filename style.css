@@ -4,36 +4,46 @@
     --primary: #00e5ff;
     --primary-dark: #00b4d8;
     --secondary: #ff3366;
-    --success: #00ff88;
+    --success: #00e676;
     --warning: #ffcc00;
     --danger: #ff3b30;
     --bg-dark: #0f172a;
-    --glass-bg: rgba(255, 255, 255, 0.1);
-    --glass-border: rgba(255, 255, 255, 0.2);
-    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-    --text-main: #ffffff;
-    --text-muted: #cbd5e1;
-    --input-bg: rgba(0,0,0,0.3);
-    --input-border: rgba(255,255,255,0.2);
-    --input-text: #ffffff;
+    --glass-bg: rgba(30, 41, 59, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --input-bg: rgba(15, 23, 42, 0.6);
+    --input-border: rgba(255, 255, 255, 0.15);
+    --input-text: #f8fafc;
+    --active-bg: rgba(0, 230, 118, 0.1);
+    --panel-bg: rgba(0, 0, 0, 0.25);
+    --title-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    --score-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+    --hover-bg: rgba(255, 255, 255, 0.1);
 }
 
 body.light-mode {
-    --primary: #0096c7;
-    --primary-dark: #0077b6;
-    --secondary: #ff3366;
-    --success: #00c853;
-    --warning: #ffb300;
-    --danger: #d50000;
+    --primary: #0284c7;
+    --primary-dark: #0369a1;
+    --secondary: #e11d48;
+    --success: #16a34a;
+    --warning: #d97706;
+    --danger: #dc2626;
     --bg-dark: #f1f5f9;
-    --glass-bg: rgba(255, 255, 255, 0.6);
-    --glass-border: rgba(0, 0, 0, 0.1);
-    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
-    --text-main: #1e293b;
+    --glass-bg: rgba(255, 255, 255, 0.85);
+    --glass-border: rgba(255, 255, 255, 1);
+    --glass-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.08);
+    --text-main: #0f172a;
     --text-muted: #64748b;
-    --input-bg: rgba(255,255,255,0.6);
-    --input-border: rgba(0,0,0,0.2);
-    --input-text: #1e293b;
+    --input-bg: #ffffff;
+    --input-border: rgba(148, 163, 184, 0.4);
+    --input-text: #0f172a;
+    --active-bg: rgba(22, 163, 74, 0.08);
+    --panel-bg: rgba(241, 245, 249, 0.9);
+    --title-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    --score-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    --hover-bg: rgba(0, 0, 0, 0.05);
 }
 
 body.light-mode .bg-animated {
@@ -107,13 +117,13 @@ body {
 }
 
 #mode-selection h1 {
-    font-size: 3.5rem;
-    font-weight: 800;
+    font-size: 4rem;
+    font-weight: 900;
     margin-bottom: 10px;
-    background: linear-gradient(to right, #00e5ff, #ff3366);
+    background: linear-gradient(to right, var(--primary), var(--secondary));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    text-shadow: 0px 4px 20px rgba(0,0,0,0.5);
+    filter: drop-shadow(var(--title-shadow));
 }
 
 #mode-selection p {
@@ -213,7 +223,7 @@ body {
     font-weight: 800;
     margin-bottom: 20px;
     word-break: break-all;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    text-shadow: var(--title-shadow);
 }
 
 .score-area {
@@ -238,7 +248,7 @@ body {
     font-size: 5.5rem;
     font-weight: 900;
     line-height: 1;
-    text-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    text-shadow: var(--score-shadow);
     transition: transform 0.2s, color 0.3s;
 }
 
@@ -286,10 +296,10 @@ body {
 
 /* Status: Eliminated */
 .player-card.eliminated {
-    background: rgba(0, 0, 0, 0.5);
-    border-color: rgba(255,255,255,0.05);
+    background: var(--panel-bg);
+    border-color: var(--glass-border);
     filter: grayscale(100%);
-    opacity: 0.5;
+    opacity: 0.7;
     transform: scale(0.95);
 }
 
@@ -304,11 +314,10 @@ body {
     border: 6px solid var(--danger);
     padding: 10px 20px;
     border-radius: 15px;
-    background: rgba(0,0,0,0.8);
+    background: var(--glass-bg);
     font-weight: 900;
     letter-spacing: 5px;
-    text-shadow: 0 0 10px rgba(255, 59, 48, 0.5);
-    box-shadow: 0 0 20px rgba(255, 59, 48, 0.3);
+    box-shadow: var(--glass-shadow);
 }
 
 /* --- Controller Mode --- */
@@ -420,7 +429,7 @@ body {
     transition: all 0.3s;
 }
 
-.active-player { border-left-color: var(--success); background: rgba(255, 255, 255, 0.15); }
+.active-player { border-left-color: var(--success); background: var(--active-bg); }
 
 .c-row {
     display: flex;
@@ -485,12 +494,12 @@ body {
     font-weight: bold;
     background: var(--glass-bg);
     color: var(--input-text);
-    border: none;
+    border: 1px solid var(--glass-border);
     border-radius: 6px;
-    transition: background 0.2s;
+    transition: all 0.2s;
 }
-.step-btn:hover { background: var(--glass-border); }
-.step-btn:active { background: rgba(128,128,128,0.3); }
+.step-btn:hover { background: var(--hover-bg); }
+.step-btn:active { transform: scale(0.9); }
 .score-disp {
     display: inline-block;
     width: 40px;

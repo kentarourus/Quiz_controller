@@ -215,7 +215,7 @@ body {
 }
 
 .player-card {
-    width: calc(25% - 25px);
+    width: calc(25% - 25px); /* Fallback */
     min-width: 280px;
     padding: 30px 20px;
     text-align: center;
@@ -227,13 +227,46 @@ body {
     justify-content: center;
 }
 
+/* Dynamic Widths based on Player Count */
+.board.count-1 .player-card { width: 100%; max-width: 800px; }
+.board.count-2 .player-card { width: calc(50% - 25px); max-width: 800px; }
+.board.count-3 .player-card { width: calc(33.333% - 25px); max-width: 600px; }
+.board.count-4 .player-card { width: calc(50% - 25px); max-width: 600px; }
+.board.count-5 .player-card,
+.board.count-6 .player-card { width: calc(33.333% - 25px); max-width: 500px; }
+.board.count-7 .player-card,
+.board.count-8 .player-card { width: calc(25% - 25px); max-width: 400px; }
+
 .player-name {
-    font-size: 2.2rem;
+    font-size: 2.2rem; /* Fallback */
     font-weight: 800;
     margin-bottom: 20px;
     word-break: break-all;
     text-shadow: var(--title-shadow);
 }
+
+/* Dynamic Font Sizes */
+.board.count-1 .player-name { font-size: 4.5rem; }
+.board.count-1 .score-val { font-size: 10rem; }
+.board.count-1 .score-label { font-size: 1.8rem; }
+
+.board.count-2 .player-name { font-size: 3.5rem; }
+.board.count-2 .score-val { font-size: 8rem; }
+.board.count-2 .score-label { font-size: 1.5rem; }
+
+.board.count-3 .player-name { font-size: 2.8rem; }
+.board.count-3 .score-val { font-size: 6.5rem; }
+.board.count-3 .score-label { font-size: 1.3rem; }
+
+.board.count-4 .player-name { font-size: 2.8rem; }
+.board.count-4 .score-val { font-size: 6.5rem; }
+.board.count-4 .score-label { font-size: 1.3rem; }
+
+.board.count-5 .player-name, .board.count-6 .player-name { font-size: 2.2rem; }
+.board.count-5 .score-val, .board.count-6 .score-val { font-size: 5.5rem; }
+
+.board.count-7 .player-name, .board.count-8 .player-name { font-size: 2rem; }
+.board.count-7 .score-val, .board.count-8 .score-val { font-size: 5rem; }
 
 .score-area {
     display: flex;
@@ -532,20 +565,21 @@ body {
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-    .player-card {
-        width: calc(50% - 20px);
+    .player-card, .board[class*="count-"] .player-card {
+        width: calc(50% - 20px) !important;
         min-width: 200px;
         padding: 20px 15px;
     }
-    .player-name { font-size: 1.6rem; }
-    .score-val { font-size: 4rem; }
+    .player-name, .board[class*="count-"] .player-name { font-size: 1.6rem !important; }
+    .score-val, .board[class*="count-"] .score-val { font-size: 4rem !important; }
+    .score-label, .board[class*="count-"] .score-label { font-size: 1rem !important; }
     .player-card.win::before { right: -50px; font-size: 0.9rem; padding: 5px 40px; }
     .player-card.eliminated::after { font-size: 2.5rem; }
 }
 
 @media (max-width: 480px) {
-    .player-card {
-        width: 100%;
+    .player-card, .board[class*="count-"] .player-card {
+        width: 100% !important;
         margin-bottom: 15px;
     }
 }

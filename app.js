@@ -182,8 +182,12 @@ function broadcastState() {
 
 function renderBoard() {
     const board = document.getElementById('board');
+    const activePlayers = gameState.filter(p => p.active);
+    
+    board.className = `board count-${activePlayers.length}`;
+
     // Instead of completely re-rendering, update existing cards if possible to preserve animations
-    gameState.filter(p => p.active).forEach(p => {
+    activePlayers.forEach(p => {
         let card = document.getElementById(`player-card-${p.id}`);
         if (!card) {
             card = document.createElement('div');

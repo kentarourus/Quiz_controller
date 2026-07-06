@@ -236,7 +236,7 @@ function renderBoard() {
         if (!card) {
             card = document.createElement('div');
             card.id = `player-card-${p.id}`;
-            card.className = `player-card glass ${p.status}`;
+            card.className = `player-card ${p.status}`;
             card.innerHTML = `
                 <div class="player-name">${p.name}</div>
                 <div class="score-area">
@@ -251,7 +251,7 @@ function renderBoard() {
                 </div>`;
             board.appendChild(card);
         } else {
-            card.className = `player-card glass ${p.status}`;
+            card.className = `player-card ${p.status}`;
             card.querySelector('.player-name').innerText = p.name;
             const scoreEl = document.getElementById(`score-val-${p.id}`);
             const penaltyEl = document.getElementById(`penalty-val-${p.id}`);

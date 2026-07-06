@@ -162,11 +162,18 @@ body {
     width: calc(25% - 30px); min-width: 280px; padding: 30px 20px; text-align: center; position: relative; overflow: hidden; 
     transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.3s cubic-bezier(0.2, 0, 0, 1), background 0.3s, border-color 0.3s; 
     display: flex; flex-direction: column; justify-content: center;
-    background: var(--md-sys-color-surface-container-lowest);
-    border: 2px solid var(--p-color, transparent);
-    border-top: 8px solid var(--p-color, transparent);
+    background: var(--md-sys-color-surface-container);
+    border: 3px solid var(--p-color, transparent);
     border-radius: var(--md-sys-shape-corner-extra-large);
     box-shadow: var(--md-sys-elevation-1);
+}
+.player-card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 12px;
+    background-color: var(--p-color, transparent);
+    z-index: 1;
 }
 
 .board.count-1 .player-card { width: 100%; max-width: 800px; }
@@ -185,8 +192,8 @@ body {
 .board.count-5 .player-name, .board.count-6 .player-name { font-size: 2.2rem; } .board.count-5 .score-val, .board.count-6 .score-val { font-size: 6rem; }
 .board.count-7 .player-name, .board.count-8 .player-name { font-size: 2rem; } .board.count-7 .score-val, .board.count-8 .score-val { font-size: 5.5rem; }
 
-.score-area { display: flex; justify-content: space-around; align-items: center; background: var(--md-sys-color-surface-container); padding: 15px 0; border-radius: 16px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
-.score-box { text-align: center; width: 45%; }
+.score-area { display: flex; justify-content: space-around; align-items: center; padding: 15px 0; }
+.score-box { text-align: center; width: 45%; position: relative; z-index: 2; }
 .score-label { font-size: 1.2rem; color: var(--text-muted); font-weight: 700; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
 
 .score-val { font-size: 6rem; font-weight: 900; line-height: 1; transition: transform 0.2s, color 0.3s; font-family: 'Outfit', sans-serif; letter-spacing: -0.04em; }
@@ -201,8 +208,9 @@ body {
     box-shadow: var(--md-sys-elevation-5); 
     animation: pulseWin 2s infinite; 
     z-index: 2;
-    border-top-color: transparent;
+    border-color: transparent;
 }
+.player-card.win::after { display: none; }
 .player-card.win .score-area {
     background-color: transparent;
     box-shadow: none;
@@ -245,8 +253,15 @@ body {
 .control-card:hover { box-shadow: var(--md-sys-elevation-2); transform: translateY(-2px); }
 .active-player { 
     background: var(--md-sys-color-surface-container);
-    border: 2px solid var(--p-color, var(--md-sys-color-primary)); 
-    border-top: 8px solid var(--p-color, var(--md-sys-color-primary)); 
+    border: 3px solid var(--p-color, var(--md-sys-color-primary)); 
+}
+.active-player::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 12px;
+    background-color: var(--p-color, var(--md-sys-color-primary));
+    z-index: 1;
 }
 
 .c-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 15px; }
@@ -303,29 +318,20 @@ body {
 
 /* --- 10 UX Improvements Added Styles --- */
 
-/* Nav Bar */
-#top-nav {
-    position: fixed; top: 0; left: 0; right: 0; height: 60px;
-    background: transparent;
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 10px 20px;
-    z-index: 1000;
-    pointer-events: none; /* Let clicks pass through transparent background */
-}
-#top-nav .nav-right {
-    pointer-events: auto; /* Re-enable clicks for buttons */
-}
+/* Nav Buttons placed in Header */
 .nav-btn {
-    background: var(--md-sys-color-surface-container); border: none; color: var(--md-sys-color-on-surface);
-    font-size: 1.2rem; font-weight: bold; cursor: pointer;
+    border: none; color: var(--md-sys-color-on-surface);
+    cursor: pointer;
     font-family: 'Outfit', 'Noto Sans JP', sans-serif;
-    display: flex; align-items: center; gap: 5px;
-    padding: 8px 12px; border-radius: 8px; transition: background 0.2s;
-    box-shadow: var(--md-sys-elevation-1);
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: var(--md-sys-elevation-2);
 }
-.nav-btn:hover { background: var(--md-sys-color-surface-container-highest); }
-.nav-btn-invite { background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); }
-.nav-right { display: flex; gap: 10px; }
+.nav-btn:hover { 
+    transform: translateY(-3px); 
+    box-shadow: var(--md-sys-elevation-4); 
+}
+.nav-btn-invite { background: var(--md-sys-color-primary-container) !important; color: var(--md-sys-color-on-primary-container) !important; }
 
 /* Massive Reset Button */
 .btn-massive-reset {
@@ -350,9 +356,9 @@ body {
 .player-card.eliminated {
     filter: grayscale(100%); opacity: 0.6; transform: scale(0.95);
     background-color: var(--md-sys-color-surface-container-highest);
-    border-top: 6px solid var(--md-sys-color-error);
+    border-color: var(--md-sys-color-error);
 }
-.player-card.eliminated::after { content: none; }
+.player-card.eliminated::after { display: none; }
 .eliminated-badge {
     position: absolute; top: 15px; right: 15px;
     background: var(--md-sys-color-error); color: var(--md-sys-color-on-error);
@@ -360,5 +366,4 @@ body {
     box-shadow: var(--md-sys-elevation-1);
 }
 
-/* Adjustments for fixed nav */
-#display-mode, #controller-mode { padding-top: 80px; }
+

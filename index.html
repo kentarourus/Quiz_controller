@@ -8,16 +8,10 @@
     <script src="https://unpkg.com/peerjs@1.5.1/dist/peerjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <!-- Include Custom Stylesheet -->
-    <link rel="stylesheet" href="style.css?v=9">
+    <link rel="stylesheet" href="style.css?v=11">
 </head>
 <body>
-    <!-- Persistent Top Navigation Bar -->
-    <nav id="top-nav" style="display: none; justify-content: flex-end;">
-        <div class="nav-right">
-            <button class="nav-btn nav-btn-invite" onclick="showJoinModal()">📱 プレイヤー招待</button>
-            <button class="nav-btn" onclick="showSettingsModal()" aria-label="設定">⚙️</button>
-        </div>
-    </nav>
+
 
     <!-- Mode Selection Screen -->
     <div id="mode-selection">
@@ -35,7 +29,13 @@
 
     <!-- Display Mode (Projector Screen) -->
     <div id="display-mode">
-        <h1 id="display-quiz-title" class="header-display" style="display:inline-block;">クイズ大会</h1>
+        <div class="header-container" style="display: flex; align-items: center; justify-content: center; gap: 20px; width: 100%; max-width: 1400px; margin-bottom: 40px;">
+            <button class="nav-btn nav-btn-invite" onclick="showJoinModal()" style="font-size: 2.5rem; padding: 20px; border-radius: 24px; aspect-ratio: 1;" title="プレイヤー招待">📱</button>
+            
+            <h1 id="display-quiz-title" class="header-display" style="margin-bottom: 0; flex-grow: 1;">クイズ大会</h1>
+            
+            <button class="nav-btn nav-btn-settings" onclick="showSettingsModal()" style="font-size: 2.5rem; padding: 20px; border-radius: 24px; aspect-ratio: 1; background: var(--md-sys-color-tertiary-container); color: var(--md-sys-color-on-tertiary-container);" title="設定">⚙️</button>
+        </div>
 
         <div class="board" id="board">
             <!-- Player cards will be injected here dynamically -->

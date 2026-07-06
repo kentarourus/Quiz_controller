@@ -94,7 +94,6 @@ function startDisplayMode() {
     initAudio();
     document.getElementById('mode-selection').style.display = 'none';
     document.getElementById('display-mode').style.display = 'flex';
-    document.getElementById('top-nav').style.display = 'flex';
     document.body.classList.add('bg-animated');
     document.body.style.overflow = 'hidden';
 
@@ -294,7 +293,6 @@ function triggerScoreAnimation(playerId, type) {
 function startControllerMode(autoConnectId = null) {
     document.getElementById('mode-selection').style.display = 'none';
     document.getElementById('controller-mode').style.display = 'block';
-    document.getElementById('top-nav').style.display = 'flex';
     peer = new Peer();
     
     if (autoConnectId) {

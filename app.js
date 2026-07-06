@@ -94,6 +94,7 @@ function startDisplayMode() {
     initAudio();
     document.getElementById('mode-selection').style.display = 'none';
     document.getElementById('display-mode').style.display = 'flex';
+    document.getElementById('top-nav').style.display = 'flex';
     document.body.classList.add('bg-animated');
     document.body.style.overflow = 'hidden';
 
@@ -236,8 +237,9 @@ function renderBoard() {
         if (!card) {
             card = document.createElement('div');
             card.id = `player-card-${p.id}`;
-            card.className = `player-card ${p.status}`;
+            card.className = `player-card ${p.status} player-color-${p.id}`;
             card.innerHTML = `
+                ${p.status === 'eliminated' ? '<div class="eliminated-badge">脱落</div>' : ''}
                 <div class="player-name">${p.name}</div>
                 <div class="score-area">
                     <div class="score-box">
@@ -251,13 +253,20 @@ function renderBoard() {
                 </div>`;
             board.appendChild(card);
         } else {
-            card.className = `player-card ${p.status}`;
+            card.className = `player-card ${p.status} player-color-${p.id}`;
             card.querySelector('.player-name').innerText = p.name;
             const scoreEl = document.getElementById(`score-val-${p.id}`);
             const penaltyEl = document.getElementById(`penalty-val-${p.id}`);
             
             if (scoreEl.innerText != p.score) scoreEl.innerText = p.score;
             if (penaltyEl.innerText != p.penalty) penaltyEl.innerText = p.penalty;
+
+            let elimBadge = card.querySelector('.eliminated-badge');
+            if (p.status === 'eliminated') {
+                if (!elimBadge) card.insertAdjacentHTML('afterbegin', '<div class="eliminated-badge">脱落</div>');
+            } else {
+                if (elimBadge) elimBadge.remove();
+            }
         }
     });
 
@@ -285,6 +294,7 @@ function triggerScoreAnimation(playerId, type) {
 function startControllerMode(autoConnectId = null) {
     document.getElementById('mode-selection').style.display = 'none';
     document.getElementById('controller-mode').style.display = 'block';
+    document.getElementById('top-nav').style.display = 'flex';
     peer = new Peer();
     
     if (autoConnectId) {
@@ -339,13 +349,14 @@ function renderControls() {
     gameState.forEach((p, i) => {
         let card = document.getElementById(`control-card-${p.id}`);
         const isBuzzerWinner = buzzerState.winnerId === p.id;
-        const baseClass = `control-card ${p.active ? 'active-player' : ''} ${isBuzzerWinner ? 'buzzer-winner-controller' : ''}`;
+        const baseClass = `control-card ${p.active ? 'active-player' : ''} ${isBuzzerWinner ? 'buzzer-winner-controller' : ''} player-color-${p.id}`;
         
         if (!card) {
             card = document.createElement('div');
             card.id = `control-card-${p.id}`;
             card.className = baseClass;
             card.innerHTML = `
+                ${isBuzzerWinner ? '<div class="controller-winner-badge">回答権！</div>' : ''}
                 <div class="c-row">
                     <div class="p-title">
                         <input type="checkbox" id="chk-active-${p.id}" onchange="updatePlayer(${i}, 'active', this.checked)" ${p.active ? 'checked' : ''}>
@@ -398,6 +409,13 @@ function renderControls() {
             
             const selectStatus = document.getElementById(`select-status-${p.id}`);
             if (selectStatus && selectStatus.value !== p.status) selectStatus.value = p.status;
+
+            let badge = card.querySelector('.controller-winner-badge');
+            if (isBuzzerWinner) {
+                if (!badge) card.insertAdjacentHTML('afterbegin', '<div class="controller-winner-badge">回答権！</div>');
+            } else {
+                if (badge) badge.remove();
+            }
         }
     });
 }

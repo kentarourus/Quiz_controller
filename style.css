@@ -106,14 +106,14 @@ body.light-mode {
     --player-7-bg: #e8eaf6; --player-7-border: #3f51b5;
 }
 
-.player-color-0 { background-color: var(--player-0-bg) !important; border-top: 8px solid var(--player-0-border) !important; }
-.player-color-1 { background-color: var(--player-1-bg) !important; border-top: 8px solid var(--player-1-border) !important; }
-.player-color-2 { background-color: var(--player-2-bg) !important; border-top: 8px solid var(--player-2-border) !important; }
-.player-color-3 { background-color: var(--player-3-bg) !important; border-top: 8px solid var(--player-3-border) !important; }
-.player-color-4 { background-color: var(--player-4-bg) !important; border-top: 8px solid var(--player-4-border) !important; }
-.player-color-5 { background-color: var(--player-5-bg) !important; border-top: 8px solid var(--player-5-border) !important; }
-.player-color-6 { background-color: var(--player-6-bg) !important; border-top: 8px solid var(--player-6-border) !important; }
-.player-color-7 { background-color: var(--player-7-bg) !important; border-top: 8px solid var(--player-7-border) !important; }
+.player-color-0 { --p-color: var(--player-0-border); }
+.player-color-1 { --p-color: var(--player-1-border); }
+.player-color-2 { --p-color: var(--player-2-border); }
+.player-color-3 { --p-color: var(--player-3-border); }
+.player-color-4 { --p-color: var(--player-4-border); }
+.player-color-5 { --p-color: var(--player-5-border); }
+.player-color-6 { --p-color: var(--player-6-border); }
+.player-color-7 { --p-color: var(--player-7-border); }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -160,9 +160,10 @@ body {
 
 .player-card {
     width: calc(25% - 30px); min-width: 280px; padding: 30px 20px; text-align: center; position: relative; overflow: hidden; 
-    transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.3s cubic-bezier(0.2, 0, 0, 1), background-color 0.3s; 
+    transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.3s cubic-bezier(0.2, 0, 0, 1), background 0.3s, border-color 0.3s; 
     display: flex; flex-direction: column; justify-content: center;
-    background-color: var(--md-sys-color-surface-container-lowest);
+    background: linear-gradient(135deg, color-mix(in srgb, var(--p-color, transparent) 15%, transparent) 0%, var(--md-sys-color-surface-container-lowest) 70%);
+    border-top: 8px solid var(--p-color, transparent);
     border-radius: var(--md-sys-shape-corner-extra-large);
     box-shadow: var(--md-sys-elevation-1);
 }
@@ -193,12 +194,13 @@ body {
 
 /* Winner State */
 .player-card.win { 
-    background-color: var(--md-sys-color-primary-container); 
+    background: var(--md-sys-color-primary-container); 
     color: var(--md-sys-color-on-primary-container); 
     transform: scale(1.05); 
     box-shadow: var(--md-sys-elevation-5); 
     animation: pulseWin 2s infinite; 
     z-index: 2;
+    border-top-color: transparent;
 }
 .player-card.win .score-area {
     background-color: transparent;
@@ -240,7 +242,10 @@ body {
 
 .control-card { padding: 25px; border-radius: var(--md-sys-shape-corner-extra-large); background: var(--md-sys-color-surface-container); transition: all 0.3s; position: relative; overflow: hidden; box-shadow: var(--md-sys-elevation-1); }
 .control-card:hover { box-shadow: var(--md-sys-elevation-2); transform: translateY(-2px); }
-.active-player { background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); }
+.active-player { 
+    background: linear-gradient(135deg, color-mix(in srgb, var(--p-color, var(--md-sys-color-primary)) 15%, transparent) 0%, var(--md-sys-color-surface-container) 80%);
+    border-top: 8px solid var(--p-color, var(--md-sys-color-primary)); 
+}
 
 .c-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 15px; }
 

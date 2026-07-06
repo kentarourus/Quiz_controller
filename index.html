@@ -8,12 +8,11 @@
     <script src="https://unpkg.com/peerjs@1.5.1/dist/peerjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <!-- Include Custom Stylesheet -->
-    <link rel="stylesheet" href="style.css?v=7">
+    <link rel="stylesheet" href="style.css?v=8">
 </head>
 <body>
     <!-- Persistent Top Navigation Bar -->
-    <nav id="top-nav" style="display: none;">
-        <button class="nav-btn" onclick="location.reload()" aria-label="トップに戻る">🏠 トップ</button>
+    <nav id="top-nav" style="display: none; justify-content: flex-end;">
         <div class="nav-right">
             <button class="nav-btn nav-btn-invite" onclick="showJoinModal()">📱 プレイヤー招待</button>
             <button class="nav-btn" onclick="showSettingsModal()" aria-label="設定">⚙️</button>
@@ -75,6 +74,10 @@
                 <div class="setting-item">
                     <span>全画面表示</span>
                     <button class="btn-action" style="background: var(--success); color: #fff; padding: 10px 20px;" onclick="toggleFullscreen()">⛶ 切替</button>
+                </div>
+                <div class="setting-item" style="margin-top: 15px; border-top: 1px solid var(--md-sys-color-outline-variant); padding-top: 15px;">
+                    <span>スタート画面に戻る</span>
+                    <button class="btn-action" style="background: var(--md-sys-color-error); color: var(--md-sys-color-on-error); padding: 10px 20px;" onclick="location.reload()">🏠 戻る</button>
                 </div>
             </div>
         </div>

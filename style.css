@@ -178,17 +178,10 @@ body {
     transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.3s cubic-bezier(0.2, 0, 0, 1), background 0.3s, border-color 0.3s; 
     display: flex; flex-direction: column; justify-content: center;
     background: var(--md-sys-color-surface-container);
-    border: 3px solid var(--p-color, transparent);
+    border: solid var(--p-color, transparent);
+    border-width: 12px 3px 3px 3px;
     border-radius: var(--md-sys-shape-corner-extra-large);
     box-shadow: var(--md-sys-elevation-1);
-}
-.player-card::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 12px;
-    background-color: var(--p-color, transparent);
-    z-index: 1;
 }
 
 .board.count-1 .player-card { width: 100%; max-width: 800px; }
@@ -225,7 +218,6 @@ body {
     z-index: 2;
     border-color: transparent;
 }
-.player-card.win::after { display: none; }
 .player-card.win .score-area {
     background-color: transparent;
     box-shadow: none;
@@ -268,15 +260,8 @@ body {
 .control-card:hover { box-shadow: var(--md-sys-elevation-2); transform: translateY(-2px); }
 .active-player { 
     background: var(--md-sys-color-surface-container);
-    border: 3px solid var(--p-color, var(--md-sys-color-primary)); 
-}
-.active-player::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 12px;
-    background-color: var(--p-color, var(--md-sys-color-primary));
-    z-index: 1;
+    border: solid var(--p-color, var(--md-sys-color-primary)); 
+    border-width: 12px 3px 3px 3px;
 }
 
 .c-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 15px; }
@@ -373,7 +358,6 @@ body {
     background-color: var(--md-sys-color-surface-container-highest);
     border-color: var(--md-sys-color-error);
 }
-.player-card.eliminated::after { display: none; }
 .eliminated-badge {
     position: absolute; top: 15px; right: 15px;
     background: var(--md-sys-color-error); color: var(--md-sys-color-on-error);

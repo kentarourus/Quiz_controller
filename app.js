@@ -147,7 +147,8 @@ function startDisplayMode() {
 
         peer.on('connection', (c) => {
             connections.push(c);
-            document.getElementById('setup-header').style.display = 'none';
+            const setupHeader = document.getElementById('setup-header');
+            if (setupHeader) setupHeader.style.display = 'none';
             
             c.on('open', () => {
                 c.send({ type: 'sync', state: gameState, title: quizTitle });

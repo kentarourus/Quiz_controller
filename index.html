@@ -11,7 +11,10 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Theme toggle moved to settings modal -->
+    <button id="theme-toggle" class="glass" onclick="toggleTheme()" style="position: fixed; top: 15px; right: 15px; z-index: 1000; border-radius: 50%; width: 45px; height: 45px; display: flex; justify-content: center; align-items: center; cursor: pointer; border: none; font-size: 1.5rem; background: var(--glass-bg); color: var(--text-main);">
+        🌞
+    </button>
+
     <!-- Mode Selection Screen -->
     <div id="mode-selection">
         <h1>Quiz Controller</h1>
@@ -28,54 +31,22 @@
 
     <!-- Display Mode (Projector Screen) -->
     <div id="display-mode">
-        <button id="btn-show-join" class="glass top-btn" onclick="showJoinModal()" style="left: 15px;">🔗 参加</button>
-        <button id="btn-show-settings" class="glass top-btn" onclick="showSettingsModal()" style="right: 15px;">⚙️ 設定</button>
-
-        <h1 id="display-quiz-title" style="font-size: 4rem; margin-top: 20px; margin-bottom: 30px; text-shadow: var(--title-shadow); text-align: center; color: var(--text-main); font-weight: 900; letter-spacing: 2px;">クイズ大会</h1>
-
+        <h1 id="display-quiz-title" style="font-size: 4rem; margin-top: 10px; margin-bottom: 20px; text-shadow: var(--title-shadow); text-align: center; color: var(--text-main); font-weight: 900; letter-spacing: 2px;">クイズ大会</h1>
+        <div class="header-display glass" id="setup-header" style="display: flex; justify-content: center; align-items: center; gap: 30px; text-align: left;">
+            <div>
+                <div style="font-size: 1rem; color: var(--text-muted); margin-bottom: 5px; font-weight: normal; letter-spacing: 0;">操作画面でこのIDを入力</div>
+                <strong id="peer-id" style="font-size: 3.5rem; letter-spacing: 5px; color: var(--success); margin: 0; line-height: 1; text-shadow: var(--title-shadow);">---</strong>
+            </div>
+            <div style="border-left: 2px solid var(--glass-border); height: 80px;"></div>
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <div style="font-size: 1rem; color: var(--text-muted); line-height: 1.4; font-weight: normal; letter-spacing: 0;">スマホのカメラで<br>スキャンして接続</div>
+                <div id="qrcode" style="background: white; padding: 8px; border-radius: 8px; display: flex; align-items: center; justify-content: center; min-width: 100px; min-height: 100px;">
+                    <span style="color: #ccc; font-size: 0.8rem;">生成中...</span>
+                </div>
+            </div>
+        </div>
         <div class="board" id="board">
             <!-- Player cards will be injected here dynamically -->
-        </div>
-
-        <!-- Join Modal -->
-        <div id="modal-join" class="modal-overlay" style="display: none;">
-            <div class="modal-content glass">
-                <button class="modal-close" onclick="hideJoinModal()">×</button>
-                <h2>参加方法</h2>
-                <div style="display: flex; justify-content: center; align-items: center; gap: 30px; margin-top: 20px; flex-wrap: wrap;">
-                    <div>
-                        <div style="font-size: 1.2rem; color: var(--text-muted); margin-bottom: 5px;">ルームID</div>
-                        <strong id="peer-id" style="font-size: 4rem; color: var(--success); text-shadow: var(--title-shadow);">---</strong>
-                    </div>
-                    <div style="border-left: 2px solid var(--glass-border); height: 100px;"></div>
-                    <div>
-                        <div style="font-size: 1.2rem; color: var(--text-muted); margin-bottom: 10px;">スマホでスキャン</div>
-                        <div id="qrcode" style="background: white; padding: 10px; border-radius: 10px; display: inline-block;"></div>
-                    </div>
-                </div>
-                <div style="margin-top: 30px; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 12px; word-break: break-all;">
-                    <div style="font-size: 1rem; color: var(--text-muted); margin-bottom: 5px;">URLで直接アクセス</div>
-                    <a id="join-url-link" href="#" target="_blank" style="color: var(--primary); font-size: 1.1rem; font-weight: bold; text-decoration: none;">---</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Settings Modal -->
-        <div id="modal-settings" class="modal-overlay" style="display: none;">
-            <div class="modal-content glass">
-                <button class="modal-close" onclick="hideSettingsModal()">×</button>
-                <h2>設定</h2>
-                <div class="settings-list">
-                    <div class="setting-item">
-                        <span>テーマ切替</span>
-                        <button id="theme-toggle" class="btn-action" style="background: var(--primary); padding: 10px 20px;" onclick="toggleTheme()">🌞 / 🌙 切替</button>
-                    </div>
-                    <div class="setting-item">
-                        <span>全画面表示</span>
-                        <button class="btn-action" style="background: var(--success); padding: 10px 20px;" onclick="toggleFullscreen()">⛶ 切替</button>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -107,7 +78,6 @@
                 </select>
                 <button class="btn-action btn-sound-m" onclick="sendAction('playSound', 'maru')">🔊 ピンポン</button>
                 <button class="btn-action btn-sound-b" onclick="sendAction('playSound', 'batsu')">🔊 ブー</button>
-                <button class="btn-action" style="background: linear-gradient(135deg, #9900ff, #5500aa); box-shadow: 0 6px 15px rgba(153, 0, 255, 0.4);" onclick="sendAction('resetBuzzer')">🛑 早押しリセット</button>
                 <button class="btn-action btn-reset" onclick="sendAction('resetAll')">🔄 全リセット</button>
             </div>
         </div>

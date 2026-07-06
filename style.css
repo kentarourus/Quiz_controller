@@ -120,7 +120,7 @@ body.light-mode {
 body { 
     font-family: var(--md-sys-typescale-display-large-font); 
     color: var(--md-sys-color-on-surface); 
-    background-color: var(--md-sys-color-surface); 
+    background-color: var(--md-sys-color-surface-container-lowest); 
     overflow-x: hidden; min-height: 100vh; 
     transition: background-color 0.3s, color 0.3s;
 }
@@ -177,11 +177,11 @@ body {
     width: calc(25% - 30px); min-width: 280px; padding: 30px 20px; text-align: center; position: relative; overflow: hidden; 
     transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.3s cubic-bezier(0.2, 0, 0, 1), background 0.3s, border-color 0.3s; 
     display: flex; flex-direction: column; justify-content: center;
-    background: var(--md-sys-color-surface-container);
+    background: var(--md-sys-color-surface-container-high);
     border: solid var(--p-color, transparent);
     border-width: 12px 3px 3px 3px;
     border-radius: var(--md-sys-shape-corner-extra-large);
-    box-shadow: var(--md-sys-elevation-1);
+    box-shadow: 0 10px 40px -10px color-mix(in srgb, var(--p-color, transparent) 30%, transparent), var(--md-sys-elevation-2);
 }
 
 .board.count-1 .player-card { width: 100%; max-width: 800px; }
@@ -259,9 +259,10 @@ body {
 .control-card { padding: 25px; border-radius: var(--md-sys-shape-corner-extra-large); background: var(--md-sys-color-surface-container); transition: all 0.3s; position: relative; overflow: hidden; box-shadow: var(--md-sys-elevation-1); }
 .control-card:hover { box-shadow: var(--md-sys-elevation-2); transform: translateY(-2px); }
 .active-player { 
-    background: var(--md-sys-color-surface-container);
+    background: var(--md-sys-color-surface-container-highest);
     border: solid var(--p-color, var(--md-sys-color-primary)); 
     border-width: 12px 3px 3px 3px;
+    box-shadow: 0 15px 50px -5px color-mix(in srgb, var(--p-color, var(--md-sys-color-primary)) 50%, transparent), var(--md-sys-elevation-4);
 }
 
 .c-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 15px; }

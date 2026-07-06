@@ -153,8 +153,8 @@ body {
 /* Display Mode */
 #display-mode { display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
 
-.header-display { padding: 15px 50px; margin-bottom: 30px; font-size: 3.5rem; font-weight: 900; letter-spacing: 2px; border-radius: var(--md-sys-shape-corner-full); background: var(--md-sys-color-surface-container); border: none; color: var(--md-sys-color-primary); box-shadow: var(--md-sys-elevation-2); }
-.header-display strong { color: var(--success); font-size: 4.5rem; margin-left: 10px; }
+.header-display { padding: 25px 60px; margin-bottom: 40px; font-size: 4.5rem; font-weight: 900; letter-spacing: 2px; border-radius: var(--md-sys-shape-corner-large); background: var(--md-sys-color-surface-container); border: none; color: var(--md-sys-color-primary); box-shadow: var(--md-sys-elevation-2); text-align: center; width: 100%; max-width: 1400px; }
+.header-display strong { color: var(--success); font-size: 5.5rem; margin-left: 10px; }
 
 .board { display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; width: 100%; max-width: 1800px; }
 
@@ -162,7 +162,8 @@ body {
     width: calc(25% - 30px); min-width: 280px; padding: 30px 20px; text-align: center; position: relative; overflow: hidden; 
     transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.3s cubic-bezier(0.2, 0, 0, 1), background 0.3s, border-color 0.3s; 
     display: flex; flex-direction: column; justify-content: center;
-    background: linear-gradient(135deg, color-mix(in srgb, var(--p-color, transparent) 15%, transparent) 0%, var(--md-sys-color-surface-container-lowest) 70%);
+    background: var(--md-sys-color-surface-container-lowest);
+    border: 2px solid var(--p-color, transparent);
     border-top: 8px solid var(--p-color, transparent);
     border-radius: var(--md-sys-shape-corner-extra-large);
     box-shadow: var(--md-sys-elevation-1);
@@ -243,7 +244,8 @@ body {
 .control-card { padding: 25px; border-radius: var(--md-sys-shape-corner-extra-large); background: var(--md-sys-color-surface-container); transition: all 0.3s; position: relative; overflow: hidden; box-shadow: var(--md-sys-elevation-1); }
 .control-card:hover { box-shadow: var(--md-sys-elevation-2); transform: translateY(-2px); }
 .active-player { 
-    background: linear-gradient(135deg, color-mix(in srgb, var(--p-color, var(--md-sys-color-primary)) 15%, transparent) 0%, var(--md-sys-color-surface-container) 80%);
+    background: var(--md-sys-color-surface-container);
+    border: 2px solid var(--p-color, var(--md-sys-color-primary)); 
     border-top: 8px solid var(--p-color, var(--md-sys-color-primary)); 
 }
 
@@ -304,17 +306,22 @@ body {
 /* Nav Bar */
 #top-nav {
     position: fixed; top: 0; left: 0; right: 0; height: 60px;
-    background: var(--md-sys-color-surface-container);
+    background: transparent;
     display: flex; justify-content: space-between; align-items: center;
-    padding: 0 20px; box-shadow: var(--md-sys-elevation-2);
+    padding: 10px 20px;
     z-index: 1000;
+    pointer-events: none; /* Let clicks pass through transparent background */
+}
+#top-nav .nav-right {
+    pointer-events: auto; /* Re-enable clicks for buttons */
 }
 .nav-btn {
-    background: none; border: none; color: var(--md-sys-color-on-surface);
+    background: var(--md-sys-color-surface-container); border: none; color: var(--md-sys-color-on-surface);
     font-size: 1.2rem; font-weight: bold; cursor: pointer;
     font-family: 'Outfit', 'Noto Sans JP', sans-serif;
     display: flex; align-items: center; gap: 5px;
     padding: 8px 12px; border-radius: 8px; transition: background 0.2s;
+    box-shadow: var(--md-sys-elevation-1);
 }
 .nav-btn:hover { background: var(--md-sys-color-surface-container-highest); }
 .nav-btn-invite { background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); }

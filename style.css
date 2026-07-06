@@ -153,7 +153,22 @@ body {
 /* Display Mode */
 #display-mode { display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
 
-.header-display { padding: 25px 60px; margin-bottom: 40px; font-size: 4.5rem; font-weight: 900; letter-spacing: 2px; border-radius: var(--md-sys-shape-corner-large); background: var(--md-sys-color-surface-container); border: none; color: var(--md-sys-color-primary); box-shadow: var(--md-sys-elevation-2); text-align: center; width: 100%; max-width: 1400px; }
+.header-display { 
+    padding: 25px 80px; 
+    margin-bottom: 40px; 
+    font-size: 4.5rem; 
+    font-weight: 900; 
+    letter-spacing: 4px; 
+    border-radius: 100px; 
+    background: linear-gradient(135deg, var(--md-sys-color-primary-container), var(--md-sys-color-tertiary-container));
+    color: var(--md-sys-color-on-primary-container);
+    border: 2px solid rgba(255, 255, 255, 0.1); 
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3), inset 0 2px 5px rgba(255,255,255,0.2); 
+    text-align: center; 
+    width: 100%; 
+    max-width: 1400px; 
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
 .header-display strong { color: var(--success); font-size: 5.5rem; margin-left: 10px; }
 
 .board { display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; width: 100%; max-width: 1800px; }

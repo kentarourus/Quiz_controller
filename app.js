@@ -10,6 +10,7 @@ let gameState = Array.from({ length: 8 }, (_, i) => ({
     status: 'active', 
     active: i < 4
 }));
+let buzzerState = { active: false, winnerId: null };
 
 let audioCtx;
 
@@ -94,6 +95,7 @@ function startDisplayMode() {
     document.getElementById('mode-selection').style.display = 'none';
     document.getElementById('display-mode').style.display = 'flex';
     document.body.classList.add('bg-animated');
+    document.body.style.overflow = 'hidden';
 
     // Add background blobs dynamically
     const blob1 = document.createElement('div'); blob1.className = 'blob blob-1';
@@ -111,18 +113,28 @@ function startDisplayMode() {
         peer.on('open', (id) => {
             document.getElementById('peer-id').innerText = id;
             
-            // Generate QR Code
+            // Generate QR Code for player.html
             const baseUrl = window.location.href.split('?')[0].split('#')[0];
-            const controllerUrl = baseUrl + '?role=controller&id=' + id;
-            document.getElementById('qrcode').innerHTML = ''; // Clear loading text
-            new QRCode(document.getElementById("qrcode"), {
-                text: controllerUrl,
-                width: 100,
-                height: 100,
-                colorDark : "#000000",
-                colorLight : "#ffffff",
-                correctLevel : QRCode.CorrectLevel.L
-            });
+            const baseDir = baseUrl.substring(0, baseUrl.lastIndexOf('/') + 1);
+            const playerUrl = baseDir + 'player.html?id=' + id;
+            
+            const qrcodeEl = document.getElementById("qrcode");
+            if (qrcodeEl) {
+                qrcodeEl.innerHTML = '';
+                new QRCode(qrcodeEl, {
+                    text: playerUrl,
+                    width: 150,
+                    height: 150,
+                    colorDark : "#000000",
+                    colorLight : "#ffffff",
+                    correctLevel : QRCode.CorrectLevel.L
+                });
+            }
+            const link = document.getElementById('join-url-link');
+            if (link) {
+                link.href = playerUrl;
+                link.innerText = playerUrl;
+            }
         });
 
         peer.on('error', (err) => {
@@ -135,9 +147,13 @@ function startDisplayMode() {
 
         peer.on('connection', (c) => {
             connections.push(c);
-            document.getElementById('setup-header').style.display = 'none';
+            const setupHeader = document.getElementById('setup-header');
+            if (setupHeader) setupHeader.style.display = 'none';
             
-            c.on('open', () => c.send({ type: 'sync', state: gameState }));
+            c.on('open', () => {
+                c.send({ type: 'sync', state: gameState, title: quizTitle });
+                c.send({ type: 'buzzerState', state: buzzerState });
+            });
             
             c.on('data', (data) => {
                 if (data.type === 'updatePlayer') {
@@ -166,6 +182,30 @@ function startDisplayMode() {
                     quizTitle = data.title;
                     document.getElementById('display-quiz-title').innerText = quizTitle;
                     broadcastState();
+                } else if (data.type === 'buzz') {
+                    const pState = gameState.find(p => p.id === data.playerId);
+                    if (!buzzerState.active && pState && pState.status === 'active') {
+                        buzzerState.active = true;
+                        buzzerState.winnerId = data.playerId;
+                        playMaru(); // 早押し音（ピンポン）
+                        
+                        // プロジェクター画面で勝者をハイライト（WINアニメーションを一時的に付与）
+                        const card = document.getElementById(`player-card-${data.playerId}`);
+                        if (card) {
+                            card.classList.add('win');
+                        }
+                        
+                        broadcastBuzzerState();
+                    }
+                } else if (data.type === 'resetBuzzer') {
+                    buzzerState.active = false;
+                    buzzerState.winnerId = null;
+                    
+                    // ハイライト解除
+                    const cards = document.querySelectorAll('.player-card');
+                    cards.forEach(c => c.classList.remove('win'));
+                    
+                    broadcastBuzzerState();
                 }
             });
         });
@@ -178,6 +218,10 @@ function startDisplayMode() {
 function broadcastState() {
     renderBoard();
     connections.forEach(c => { if (c.open) c.send({ type: 'sync', state: gameState, title: quizTitle }); });
+}
+
+function broadcastBuzzerState() {
+    connections.forEach(c => { if (c.open) c.send({ type: 'buzzerState', state: buzzerState }); });
 }
 
 function renderBoard() {
@@ -274,6 +318,9 @@ function connectToDisplay() {
             const activeCount = gameState.filter(p => p.active).length;
             const bulkSelect = document.getElementById('bulk-count');
             if (bulkSelect && bulkSelect.value != activeCount) bulkSelect.value = activeCount;
+        } else if (data.type === 'buzzerState') {
+            buzzerState = data.state;
+            renderControls();
         }
     });
     
@@ -288,46 +335,70 @@ function changePlayerCount(count) {
 
 function renderControls() {
     const container = document.getElementById('controls');
-    container.innerHTML = '';
     
     gameState.forEach((p, i) => {
-        const div = document.createElement('div');
-        div.className = `control-card glass ${p.active ? 'active-player' : ''}`;
-        div.innerHTML = `
-            <div class="c-row">
-                <div class="p-title">
-                    <input type="checkbox" onchange="updatePlayer(${i}, 'active', this.checked)" ${p.active ? 'checked' : ''}>
-                    <input type="text" value="${p.name}" onchange="updatePlayer(${i}, 'name', this.value)" placeholder="名前">
+        let card = document.getElementById(`control-card-${p.id}`);
+        const isBuzzerWinner = buzzerState.winnerId === p.id;
+        const baseClass = `control-card ${p.active ? 'active-player' : ''} ${isBuzzerWinner ? 'buzzer-winner-controller' : ''}`;
+        
+        if (!card) {
+            card = document.createElement('div');
+            card.id = `control-card-${p.id}`;
+            card.className = baseClass;
+            card.innerHTML = `
+                <div class="c-row">
+                    <div class="p-title">
+                        <input type="checkbox" id="chk-active-${p.id}" onchange="updatePlayer(${i}, 'active', this.checked)" ${p.active ? 'checked' : ''}>
+                        <input type="text" id="input-name-${p.id}" value="${p.name}" onchange="updatePlayer(${i}, 'name', this.value)" placeholder="名前">
+                    </div>
                 </div>
-            </div>
-            <div class="c-row">
-                <button class="btn-big c-btn-m" onclick="sendAction('playSound','maru'); updatePlayer(${i},'score',${p.score+1})">〇 正解</button> 
-                <button class="btn-big c-btn-b" onclick="sendAction('playSound','batsu'); updatePlayer(${i},'penalty',${p.penalty+1})">✕ 誤答</button>
-            </div>
-            <div class="c-row" style="background: var(--panel-bg); padding: 12px; border-radius: 12px; border: 1px solid var(--glass-border);">
-                <div class="score-adjuster">
-                    <span style="margin-right: 10px; font-weight: bold; color: var(--success);">〇:</span>
-                    <button class="step-btn" onclick="updatePlayer(${i},'score',${p.score-1})">-</button> 
-                    <span class="score-disp">${p.score}</span> 
-                    <button class="step-btn" onclick="updatePlayer(${i},'score',${p.score+1})">+</button>
+                <div class="c-row" style="gap: 15px;">
+                    <button class="btn-big c-btn-m" onclick="sendAction('playSound','maru'); updatePlayer(${i},'score',gameState[${i}].score+1)">〇 正解</button> 
+                    <button class="btn-big c-btn-b" onclick="sendAction('playSound','batsu'); updatePlayer(${i},'penalty',gameState[${i}].penalty+1)">✕ 誤答</button>
                 </div>
-                <div class="score-adjuster">
-                    <span style="margin-right: 10px; font-weight: bold; color: var(--danger);">✕:</span>
-                    <button class="step-btn" onclick="updatePlayer(${i},'penalty',${p.penalty-1})">-</button> 
-                    <span class="score-disp">${p.penalty}</span> 
-                    <button class="step-btn" onclick="updatePlayer(${i},'penalty',${p.penalty+1})">+</button>
+                <div class="score-adjuster-container">
+                    <div class="score-adjuster">
+                        <span class="score-adjuster-label" style="color: var(--success);">〇</span>
+                        <button class="step-btn" onclick="updatePlayer(${i},'score',gameState[${i}].score-1)">-</button> 
+                        <span class="score-disp" id="disp-score-${p.id}">${p.score}</span> 
+                        <button class="step-btn" onclick="updatePlayer(${i},'score',gameState[${i}].score+1)">+</button>
+                    </div>
+                    <div class="score-adjuster">
+                        <span class="score-adjuster-label" style="color: var(--danger);">✕</span>
+                        <button class="step-btn" onclick="updatePlayer(${i},'penalty',gameState[${i}].penalty-1)">-</button> 
+                        <span class="score-disp" id="disp-penalty-${p.id}">${p.penalty}</span> 
+                        <button class="step-btn" onclick="updatePlayer(${i},'penalty',gameState[${i}].penalty+1)">+</button>
+                    </div>
                 </div>
-            </div>
-            <div class="c-row">
-                <span style="font-weight: 600;">状態:</span> 
-                <select class="s-select" onchange="updatePlayer(${i}, 'status', this.value)">
-                    <option value="active" ${p.status === 'active' ? 'selected' : ''}>通常</option>
-                    <option value="win" ${p.status === 'win' ? 'selected' : ''}>勝ち抜け</option>
-                    <option value="eliminated" ${p.status === 'eliminated' ? 'selected' : ''}>脱落</option>
-                </select>
-            </div>
-        `;
-        container.appendChild(div);
+                <div class="c-row">
+                    <span style="font-weight: 600;">状態:</span> 
+                    <select class="s-select" id="select-status-${p.id}" onchange="updatePlayer(${i}, 'status', this.value)">
+                        <option value="active" ${p.status === 'active' ? 'selected' : ''}>通常</option>
+                        <option value="win" ${p.status === 'win' ? 'selected' : ''}>勝ち抜け</option>
+                        <option value="eliminated" ${p.status === 'eliminated' ? 'selected' : ''}>脱落</option>
+                    </select>
+                </div>
+            `;
+            container.appendChild(card);
+        } else {
+            card.className = baseClass;
+            const chkActive = document.getElementById(`chk-active-${p.id}`);
+            if (chkActive && chkActive.checked !== p.active) chkActive.checked = p.active;
+            
+            const inputName = document.getElementById(`input-name-${p.id}`);
+            if (inputName && inputName !== document.activeElement && inputName.value !== p.name) {
+                inputName.value = p.name;
+            }
+            
+            const dispScore = document.getElementById(`disp-score-${p.id}`);
+            if (dispScore && dispScore.innerText != p.score) dispScore.innerText = p.score;
+            
+            const dispPenalty = document.getElementById(`disp-penalty-${p.id}`);
+            if (dispPenalty && dispPenalty.innerText != p.penalty) dispPenalty.innerText = p.penalty;
+            
+            const selectStatus = document.getElementById(`select-status-${p.id}`);
+            if (selectStatus && selectStatus.value !== p.status) selectStatus.value = p.status;
+        }
     });
 }
 
@@ -345,10 +416,39 @@ function updateQuizTitle(title) {
 function toggleTheme() {
     document.body.classList.toggle('light-mode');
     const btn = document.getElementById('theme-toggle');
-    if (document.body.classList.contains('light-mode')) {
-        btn.innerText = '🌙';
+    if (btn) {
+        if (document.body.classList.contains('light-mode')) {
+            btn.innerText = '🌙 / 🌞 切替';
+        } else {
+            btn.innerText = '🌞 / 🌙 切替';
+        }
+    }
+}
+
+// --- Modal & UI Logic ---
+function showJoinModal() {
+    const el = document.getElementById('modal-join');
+    if (el) el.style.display = 'flex';
+}
+function hideJoinModal() {
+    const el = document.getElementById('modal-join');
+    if (el) el.style.display = 'none';
+}
+function showSettingsModal() {
+    const el = document.getElementById('modal-settings');
+    if (el) el.style.display = 'flex';
+}
+function hideSettingsModal() {
+    const el = document.getElementById('modal-settings');
+    if (el) el.style.display = 'none';
+}
+function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+            console.log(`Error attempting to enable fullscreen: ${err.message}`);
+        });
     } else {
-        btn.innerText = '🌞';
+        document.exitFullscreen();
     }
 }
 

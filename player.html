@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>早押しボタン - クイズ大会</title>
+    <script src="https://unpkg.com/peerjs@1.5.1/dist/peerjs.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Player specific styles */
+        body { margin: 0; overflow: hidden; display: flex; flex-direction: column; height: 100vh; height: 100dvh; background-color: var(--bg-dark); }
+        #setup-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; padding: 20px; text-align: center; }
+        #buzzer-screen { display: none; flex-direction: column; height: 100%; padding: 20px; }
+        
+        .huge-buzzer { flex-grow: 1; margin-top: 20px; border-radius: 40px; background: linear-gradient(135deg, #ff0055, #990033); border: 8px solid #ff99bb; box-shadow: 0 20px 50px rgba(255,0,85,0.6), inset 0 10px 20px rgba(255,255,255,0.4); color: white; font-size: 5rem; font-weight: 900; cursor: pointer; transition: transform 0.1s; font-family: 'Outfit', 'Noto Sans JP', sans-serif; display: flex; justify-content: center; align-items: center; letter-spacing: 5px; outline: none; -webkit-tap-highlight-color: transparent; }
+        .huge-buzzer:active { transform: scale(0.95); box-shadow: 0 10px 20px rgba(255,0,85,0.4), inset 0 5px 10px rgba(0,0,0,0.5); }
+        .huge-buzzer.locked { background: linear-gradient(135deg, #444, #222) !important; border-color: #666 !important; box-shadow: none !important; color: #888 !important; transform: scale(0.98); cursor: not-allowed; pointer-events: none; }
+        .huge-buzzer.winner { background: linear-gradient(135deg, #ffcc00, #ff9900) !important; border-color: #ffffff !important; box-shadow: 0 0 50px rgba(255,204,0,0.8) !important; color: #000000 !important; transform: scale(1.02); }
+
+        .status-bar { text-align: center; font-size: 1.8rem; font-weight: bold; margin-bottom: 10px; color: var(--text-main); }
+        .win-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; background: radial-gradient(circle, rgba(255,204,0,0.4) 0%, transparent 70%); display: none; z-index: 10; animation: pulse 1s infinite; }
+        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+    </style>
+</head>
+<body class="bg-animated">
+    <div id="setup-screen" class="glass" style="margin: 20px; border-radius: 24px;">
+        <h1 style="color: var(--primary); margin-bottom: 30px; font-size: 2.5rem; text-shadow: var(--title-shadow);">解答者ログイン</h1>
+        
+        <label style="font-weight: bold; margin-bottom: 10px; display: block;">対象の表示画面ID</label>
+        <input type="tel" id="target-id" placeholder="6桁のID" style="font-family: 'Outfit', sans-serif; font-size: 2rem; padding: 15px; width: 100%; max-width: 300px; text-align: center; margin-bottom: 25px; border-radius: 12px; border: 2px solid var(--primary); background: var(--input-bg); color: var(--text-main); font-weight: 800; letter-spacing: 5px;" disabled>
+        
+        <label style="font-weight: bold; margin-bottom: 10px; display: block;">あなたは誰ですか？</label>
+        <select id="player-select" style="font-family: 'Outfit', 'Noto Sans JP', sans-serif; font-weight: bold; font-size: 1.5rem; padding: 15px; width: 100%; max-width: 300px; text-align: center; margin-bottom: 25px; border-radius: 12px; border: 2px solid var(--primary); background: var(--input-bg); color: var(--text-main); outline: none;">
+            <option value="0">Player 1</option>
+            <option value="1">Player 2</option>
+            <option value="2">Player 3</option>
+            <option value="3">Player 4</option>
+            <option value="4">Player 5</option>
+            <option value="5">Player 6</option>
+            <option value="6">Player 7</option>
+            <option value="7">Player 8</option>
+        </select>
+        
+        <button onclick="joinGame()" style="font-size: 1.5rem; padding: 15px 50px; border-radius: 16px; border: none; background: linear-gradient(135deg, var(--success), #00994d); color: white; font-weight: bold; cursor: pointer; box-shadow: 0 10px 20px rgba(0,255,115,0.3); font-family: 'Noto Sans JP', sans-serif;">参加する</button>
+        <p id="msg" style="color: var(--danger); font-weight: bold; margin-top: 20px; font-size: 1.2rem;"></p>
+    </div>
+
+    <div id="buzzer-screen">
+        <div class="status-bar" id="status-text">待機中...</div>
+        <button id="buzzer-btn" class="huge-buzzer">PUSH</button>
+    </div>
+    
+    <div id="win-overlay" class="win-overlay"></div>
+
+    <script src="player.js"></script>
+</body>
+</html>

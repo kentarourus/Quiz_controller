@@ -7,30 +7,114 @@
     <script src="https://unpkg.com/peerjs@1.5.1/dist/peerjs.min.js"></script>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Player specific styles */
-        body { margin: 0; overflow: hidden; display: flex; flex-direction: column; height: 100vh; height: 100dvh; background-color: var(--bg-dark); }
-        #setup-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; padding: 20px; text-align: center; }
-        #buzzer-screen { display: none; flex-direction: column; height: 100%; padding: 20px; }
+        /* Player specific styles - Material 3 Expressive */
+        body { 
+            margin: 0; overflow: hidden; display: flex; flex-direction: column; 
+            height: 100vh; height: 100dvh; 
+        }
+        #setup-screen { 
+            display: flex; flex-direction: column; justify-content: center; align-items: center; 
+            height: 100%; padding: 20px; text-align: center; 
+            background: var(--md-sys-color-surface-container);
+            border-radius: var(--md-sys-shape-corner-extra-large);
+            margin: 20px;
+        }
+        #buzzer-screen { 
+            display: none; flex-direction: column; height: 100%; padding: 20px; 
+            background: var(--md-sys-color-surface);
+        }
         
-        .huge-buzzer { flex-grow: 1; margin-top: 20px; border-radius: 40px; background: linear-gradient(135deg, #ff0055, #990033); border: 8px solid #ff99bb; box-shadow: 0 20px 50px rgba(255,0,85,0.6), inset 0 10px 20px rgba(255,255,255,0.4); color: white; font-size: 5rem; font-weight: 900; cursor: pointer; transition: transform 0.1s; font-family: 'Outfit', 'Noto Sans JP', sans-serif; display: flex; justify-content: center; align-items: center; letter-spacing: 5px; outline: none; -webkit-tap-highlight-color: transparent; }
-        .huge-buzzer:active { transform: scale(0.95); box-shadow: 0 10px 20px rgba(255,0,85,0.4), inset 0 5px 10px rgba(0,0,0,0.5); }
-        .huge-buzzer.locked { background: linear-gradient(135deg, #444, #222) !important; border-color: #666 !important; box-shadow: none !important; color: #888 !important; transform: scale(0.98); cursor: not-allowed; pointer-events: none; }
-        .huge-buzzer.winner { background: linear-gradient(135deg, #ffcc00, #ff9900) !important; border-color: #ffffff !important; box-shadow: 0 0 50px rgba(255,204,0,0.8) !important; color: #000000 !important; transform: scale(1.02); }
+        .huge-buzzer { 
+            flex-grow: 1; margin-top: 20px; 
+            border-radius: 40px; /* Squircle */
+            background-color: var(--md-sys-color-primary); 
+            color: var(--md-sys-color-on-primary); 
+            border: none;
+            box-shadow: 0 16px 32px rgba(0,0,0,0.15); 
+            font-size: 5rem; font-weight: 900; cursor: pointer; 
+            transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1), border-radius 0.2s cubic-bezier(0.2, 0, 0, 1), background-color 0.2s, box-shadow 0.2s; 
+            font-family: var(--md-sys-typescale-display-large-font); 
+            display: flex; justify-content: center; align-items: center; 
+            letter-spacing: var(--md-sys-typescale-display-large-tracking); 
+            outline: none; -webkit-tap-highlight-color: transparent; 
+        }
+        .huge-buzzer:active { 
+            transform: scale(0.95); 
+            border-radius: var(--md-sys-shape-corner-full); /* Becomes full circle on tap */
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2); 
+        }
+        .huge-buzzer.locked { 
+            background-color: var(--md-sys-color-surface-container-highest) !important; 
+            color: var(--text-muted) !important; 
+            box-shadow: none !important; 
+            transform: scale(0.98); cursor: not-allowed; pointer-events: none; 
+            border-radius: 40px;
+        }
+        .huge-buzzer.winner { 
+            background-color: var(--md-sys-color-primary-container) !important; 
+            color: var(--md-sys-color-on-primary-container) !important; 
+            box-shadow: 0 0 50px rgba(0,0,0,0.2) !important; 
+            transform: scale(1.02); 
+        }
 
-        .status-bar { text-align: center; font-size: 1.8rem; font-weight: bold; margin-bottom: 10px; color: var(--text-main); }
-        .win-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; background: radial-gradient(circle, rgba(255,204,0,0.4) 0%, transparent 70%); display: none; z-index: 10; animation: pulse 1s infinite; }
-        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+        .status-bar { 
+            text-align: center; font-size: 1.8rem; font-weight: bold; margin-bottom: 10px; 
+            color: var(--md-sys-color-on-surface); 
+            background: var(--md-sys-color-surface-container-high);
+            padding: 15px;
+            border-radius: var(--md-sys-shape-corner-full);
+        }
+        
+        .win-overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; 
+            background: radial-gradient(circle, var(--md-sys-color-primary-container) 0%, transparent 70%); 
+            display: none; z-index: 10; animation: pulse 1s infinite; 
+            opacity: 0.5;
+        }
+        @keyframes pulse { 0% { opacity: 0.3; } 50% { opacity: 0.7; } 100% { opacity: 0.3; } }
+        
+        .setup-label {
+            font-weight: 700; margin-bottom: 10px; display: block; color: var(--text-muted);
+        }
+        
+        .setup-input, .setup-select {
+            font-family: 'Outfit', 'Noto Sans JP', sans-serif; 
+            font-weight: 800; padding: 15px; width: 100%; max-width: 300px; 
+            text-align: center; margin-bottom: 25px; 
+            border-radius: 16px; 
+            border: 2px solid var(--md-sys-color-primary); 
+            background: var(--md-sys-color-surface-container-lowest); 
+            color: var(--md-sys-color-on-surface); 
+            outline: none;
+        }
+        .setup-input { font-size: 2rem; letter-spacing: 5px; }
+        .setup-select { font-size: 1.5rem; }
+        
+        .setup-btn {
+            font-size: 1.5rem; padding: 18px 50px; 
+            border-radius: var(--md-sys-shape-corner-full); 
+            border: none; 
+            background-color: var(--md-sys-color-primary); 
+            color: var(--md-sys-color-on-primary); 
+            font-weight: 800; cursor: pointer; 
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15); 
+            font-family: 'Noto Sans JP', sans-serif;
+            transition: transform 0.2s;
+        }
+        .setup-btn:active {
+            transform: scale(0.95);
+        }
     </style>
 </head>
-<body class="bg-animated">
-    <div id="setup-screen" class="glass" style="margin: 20px; border-radius: 24px;">
-        <h1 style="color: var(--primary); margin-bottom: 30px; font-size: 2.5rem; text-shadow: var(--title-shadow);">解答者ログイン</h1>
+<body>
+    <div id="setup-screen">
+        <h1 style="color: var(--md-sys-color-primary); margin-bottom: 30px; font-size: 2.5rem; letter-spacing: -0.02em;">解答者ログイン</h1>
         
-        <label style="font-weight: bold; margin-bottom: 10px; display: block;">対象の表示画面ID</label>
-        <input type="tel" id="target-id" placeholder="6桁のID" style="font-family: 'Outfit', sans-serif; font-size: 2rem; padding: 15px; width: 100%; max-width: 300px; text-align: center; margin-bottom: 25px; border-radius: 12px; border: 2px solid var(--primary); background: var(--input-bg); color: var(--text-main); font-weight: 800; letter-spacing: 5px;" disabled>
+        <label class="setup-label">対象の表示画面ID</label>
+        <input type="tel" id="target-id" class="setup-input" placeholder="6桁のID" disabled>
         
-        <label style="font-weight: bold; margin-bottom: 10px; display: block;">あなたは誰ですか？</label>
-        <select id="player-select" style="font-family: 'Outfit', 'Noto Sans JP', sans-serif; font-weight: bold; font-size: 1.5rem; padding: 15px; width: 100%; max-width: 300px; text-align: center; margin-bottom: 25px; border-radius: 12px; border: 2px solid var(--primary); background: var(--input-bg); color: var(--text-main); outline: none;">
+        <label class="setup-label">あなたは誰ですか？</label>
+        <select id="player-select" class="setup-select">
             <option value="0">Player 1</option>
             <option value="1">Player 2</option>
             <option value="2">Player 3</option>
@@ -41,8 +125,8 @@
             <option value="7">Player 8</option>
         </select>
         
-        <button onclick="joinGame()" style="font-size: 1.5rem; padding: 15px 50px; border-radius: 16px; border: none; background: linear-gradient(135deg, var(--success), #00994d); color: white; font-weight: bold; cursor: pointer; box-shadow: 0 10px 20px rgba(0,255,115,0.3); font-family: 'Noto Sans JP', sans-serif;">参加する</button>
-        <p id="msg" style="color: var(--danger); font-weight: bold; margin-top: 20px; font-size: 1.2rem;"></p>
+        <button onclick="joinGame()" class="setup-btn">参加する</button>
+        <p id="msg" style="color: var(--md-sys-color-error); font-weight: bold; margin-top: 20px; font-size: 1.2rem;"></p>
     </div>
 
     <div id="buzzer-screen">

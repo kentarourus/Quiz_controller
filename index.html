@@ -28,10 +28,10 @@
 
     <!-- Display Mode (Projector Screen) -->
     <div id="display-mode">
-        <button id="btn-show-join" class="glass top-btn" onclick="showJoinModal()" style="left: 15px;">🔗 参加</button>
-        <button id="btn-show-settings" class="glass top-btn" onclick="showSettingsModal()" style="right: 15px;">⚙️ 設定</button>
+        <button id="btn-show-join" class="top-btn" onclick="showJoinModal()" style="left: 15px;">🔗 参加</button>
+        <button id="btn-show-settings" class="top-btn" onclick="showSettingsModal()" style="right: 15px;">⚙️ 設定</button>
 
-        <h1 id="display-quiz-title" style="font-size: 4rem; margin-top: 20px; margin-bottom: 30px; text-shadow: var(--title-shadow); text-align: center; color: var(--text-main); font-weight: 900; letter-spacing: 2px;">クイズ大会</h1>
+        <h1 id="display-quiz-title" class="header-display" style="display:inline-block;">クイズ大会</h1>
 
         <div class="board" id="board">
             <!-- Player cards will be injected here dynamically -->
@@ -39,40 +39,40 @@
 
         <!-- Join Modal -->
         <div id="modal-join" class="modal-overlay" style="display: none;">
-            <div class="modal-content glass">
+            <div class="modal-content">
                 <button class="modal-close" onclick="hideJoinModal()">×</button>
                 <h2>参加方法</h2>
                 <div style="display: flex; justify-content: center; align-items: center; gap: 30px; margin-top: 20px; flex-wrap: wrap;">
                     <div>
                         <div style="font-size: 1.2rem; color: var(--text-muted); margin-bottom: 5px;">ルームID</div>
-                        <strong id="peer-id" style="font-size: 4rem; color: var(--success); text-shadow: var(--title-shadow);">---</strong>
+                        <strong id="peer-id" style="font-size: 4rem; color: var(--success);">---</strong>
                     </div>
-                    <div style="border-left: 2px solid var(--glass-border); height: 100px;"></div>
+                    <div style="border-left: 2px solid var(--md-sys-color-surface-container-highest); height: 100px;"></div>
                     <div>
                         <div style="font-size: 1.2rem; color: var(--text-muted); margin-bottom: 10px;">スマホでスキャン</div>
                         <div id="qrcode" style="background: white; padding: 10px; border-radius: 10px; display: inline-block;"></div>
                     </div>
                 </div>
-                <div style="margin-top: 30px; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 12px; word-break: break-all;">
+                <div style="margin-top: 30px; background: rgba(0,0,0,0.1); padding: 15px; border-radius: 12px; word-break: break-all;">
                     <div style="font-size: 1rem; color: var(--text-muted); margin-bottom: 5px;">URLで直接アクセス</div>
-                    <a id="join-url-link" href="#" target="_blank" style="color: var(--primary); font-size: 1.1rem; font-weight: bold; text-decoration: none;">---</a>
+                    <a id="join-url-link" href="#" target="_blank" style="color: var(--md-sys-color-primary); font-size: 1.1rem; font-weight: bold; text-decoration: none;">---</a>
                 </div>
             </div>
         </div>
 
         <!-- Settings Modal -->
         <div id="modal-settings" class="modal-overlay" style="display: none;">
-            <div class="modal-content glass">
+            <div class="modal-content">
                 <button class="modal-close" onclick="hideSettingsModal()">×</button>
                 <h2>設定</h2>
                 <div class="settings-list">
                     <div class="setting-item">
                         <span>テーマ切替</span>
-                        <button id="theme-toggle" class="btn-action" style="background: var(--primary); padding: 10px 20px;" onclick="toggleTheme()">🌞 / 🌙 切替</button>
+                        <button id="theme-toggle" class="btn-action" style="background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); padding: 10px 20px;" onclick="toggleTheme()">🌞 / 🌙 切替</button>
                     </div>
                     <div class="setting-item">
                         <span>全画面表示</span>
-                        <button class="btn-action" style="background: var(--success); padding: 10px 20px;" onclick="toggleFullscreen()">⛶ 切替</button>
+                        <button class="btn-action" style="background: var(--success); color: #fff; padding: 10px 20px;" onclick="toggleFullscreen()">⛶ 切替</button>
                     </div>
                 </div>
             </div>
@@ -81,7 +81,7 @@
 
     <!-- Controller Mode (Mobile/Admin Screen) -->
     <div id="controller-mode">
-        <div class="setup-area glass" id="setup">
+        <div class="setup-area" id="setup">
             <h2>表示画面のIDを入力して接続</h2>
             <input type="tel" id="target-id" placeholder="6桁のID" autocomplete="off" autocorrect="off" autocapitalize="off" maxlength="6">
             <br>
@@ -89,10 +89,10 @@
             <p id="status-msg" style="color:var(--danger); font-weight:bold; margin-top:15px; font-size:1.1rem;"></p>
         </div>
 
-        <div class="global-controls glass" id="global-controls" style="display: flex; flex-direction: column; gap: 20px;">
-            <div class="control-row" style="width: 100%; justify-content: flex-start; gap: 15px; border-bottom: 1px solid var(--glass-border); padding-bottom: 15px;">
+        <div class="global-controls" id="global-controls">
+            <div class="control-row" style="width: 100%; justify-content: flex-start; gap: 15px; border-bottom: 1px solid var(--md-sys-color-surface-container-highest); padding-bottom: 15px;">
                 <label style="font-weight:600;">🏆 大会名:</label>
-                <input type="text" id="quiz-title-input" placeholder="大会名を入力" style="font-family: 'Outfit', 'Noto Sans JP', sans-serif; font-size: 1.1rem; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--input-border); background: var(--input-bg); color: var(--input-text); outline: none; flex-grow: 1; max-width: 300px;" onchange="updateQuizTitle(this.value)">
+                <input type="text" id="quiz-title-input" placeholder="大会名を入力" style="font-family: 'Outfit', 'Noto Sans JP', sans-serif; font-size: 1.1rem; padding: 10px 15px; border-radius: 12px; border: none; background: var(--md-sys-color-surface-container-highest); color: var(--md-sys-color-on-surface); outline: none; flex-grow: 1; max-width: 300px; font-weight: 700;" onchange="updateQuizTitle(this.value)">
                 
                 <div style="width: 20px;"></div><!-- スペーサー -->
 
@@ -117,7 +117,7 @@
                 
                 <!-- 進行系グループ -->
                 <div style="display: flex; gap: 15px;">
-                    <button class="btn-action" style="background: linear-gradient(135deg, #9900ff, #5500aa); box-shadow: 0 6px 15px rgba(153, 0, 255, 0.4);" onclick="sendAction('resetBuzzer')">🛑 早押しリセット</button>
+                    <button class="btn-action btn-reset-buzzer" onclick="sendAction('resetBuzzer')">🛑 早押しリセット</button>
                     <button class="btn-action btn-reset" onclick="sendAction('resetAll')">🔄 全リセット</button>
                 </div>
             </div>

@@ -89,12 +89,13 @@
             <p id="status-msg" style="color:var(--danger); font-weight:bold; margin-top:15px; font-size:1.1rem;"></p>
         </div>
 
-        <div class="global-controls glass" id="global-controls">
-            <div class="control-row" style="margin-bottom: 15px; width: 100%;">
+        <div class="global-controls glass" id="global-controls" style="display: flex; flex-direction: column; gap: 20px;">
+            <div class="control-row" style="width: 100%; justify-content: flex-start; gap: 15px; border-bottom: 1px solid var(--glass-border); padding-bottom: 15px;">
                 <label style="font-weight:600;">🏆 大会名:</label>
-                <input type="text" id="quiz-title-input" placeholder="大会名を入力" style="font-family: 'Outfit', 'Noto Sans JP', sans-serif; font-size: 1.1rem; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--input-border); background: var(--input-bg); color: var(--input-text); outline: none; flex-grow: 1; max-width: 400px;" onchange="updateQuizTitle(this.value)">
-            </div>
-            <div class="control-row">
+                <input type="text" id="quiz-title-input" placeholder="大会名を入力" style="font-family: 'Outfit', 'Noto Sans JP', sans-serif; font-size: 1.1rem; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--input-border); background: var(--input-bg); color: var(--input-text); outline: none; flex-grow: 1; max-width: 300px;" onchange="updateQuizTitle(this.value)">
+                
+                <div style="width: 20px;"></div><!-- スペーサー -->
+
                 <label style="font-weight:600;">👤 表示人数:</label>
                 <select id="bulk-count" class="count-selector" onchange="changePlayerCount(this.value)">
                     <option value="2">2人</option>
@@ -105,10 +106,20 @@
                     <option value="7">7人</option>
                     <option value="8">8人</option>
                 </select>
-                <button class="btn-action btn-sound-m" onclick="sendAction('playSound', 'maru')">🔊 ピンポン</button>
-                <button class="btn-action btn-sound-b" onclick="sendAction('playSound', 'batsu')">🔊 ブー</button>
-                <button class="btn-action" style="background: linear-gradient(135deg, #9900ff, #5500aa); box-shadow: 0 6px 15px rgba(153, 0, 255, 0.4);" onclick="sendAction('resetBuzzer')">🛑 早押しリセット</button>
-                <button class="btn-action btn-reset" onclick="sendAction('resetAll')">🔄 全リセット</button>
+            </div>
+            
+            <div class="control-row" style="justify-content: space-between;">
+                <!-- 音声系グループ -->
+                <div style="display: flex; gap: 15px;">
+                    <button class="btn-action btn-sound-m" onclick="sendAction('playSound', 'maru')">🔊 ピンポン</button>
+                    <button class="btn-action btn-sound-b" onclick="sendAction('playSound', 'batsu')">🔊 ブー</button>
+                </div>
+                
+                <!-- 進行系グループ -->
+                <div style="display: flex; gap: 15px;">
+                    <button class="btn-action" style="background: linear-gradient(135deg, #9900ff, #5500aa); box-shadow: 0 6px 15px rgba(153, 0, 255, 0.4);" onclick="sendAction('resetBuzzer')">🛑 早押しリセット</button>
+                    <button class="btn-action btn-reset" onclick="sendAction('resetAll')">🔄 全リセット</button>
+                </div>
             </div>
         </div>
 

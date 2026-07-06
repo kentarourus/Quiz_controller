@@ -67,13 +67,13 @@ body.light-mode {
     --bg-grad-4: #e2e8f0;
     --blob-1: rgba(2, 132, 199, 0.1);
     --blob-2: rgba(225, 29, 72, 0.1);
-    --card-bg-1: rgba(255, 255, 255, 0.9);
-    --card-bg-2: rgba(240, 248, 255, 0.9);
-    --card-bg-active-1: rgba(22, 163, 74, 0.15);
-    --card-bg-active-2: rgba(240, 248, 255, 0.9);
-    --card-border: rgba(2, 132, 199, 0.2);
-    --card-border-top: rgba(2, 132, 199, 0.5);
-    --card-shadow: 0 15px 35px rgba(0,0,0,0.1), inset 0 -5px 20px rgba(2,132,199,0.05);
+    --card-bg-1: rgba(255, 255, 255, 0.95);
+    --card-bg-2: rgba(248, 250, 252, 0.95);
+    --card-bg-active-1: rgba(22, 163, 74, 0.2);
+    --card-bg-active-2: rgba(241, 245, 249, 0.95);
+    --card-border: rgba(148, 163, 184, 0.5);
+    --card-border-top: rgba(2, 132, 199, 0.6);
+    --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1), inset 0 0 0 1px rgba(255, 255, 255, 0.5), inset 0 -5px 20px rgba(2,132,199,0.05);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }

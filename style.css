@@ -50,14 +50,18 @@
     --md-sys-elevation-5: 0px 4px 4px 0px rgba(0,0,0,0.30), 0px 8px 12px 6px rgba(0,0,0,0.15);
 
     /* Player Colors (Dark) */
-    --player-0-bg: #1a437a; --player-0-border: #8ab4f8;
-    --player-1-bg: #b31412; --player-1-border: #f28b82;
-    --player-2-bg: #8c5d00; --player-2-border: #fdd663;
-    --player-3-bg: #1b5e20; --player-3-border: #81c995;
-    --player-4-bg: #4a148c; --player-4-border: #d7aefb;
-    --player-5-bg: #006064; --player-5-border: #78d9ec;
-    --player-6-bg: #880e4f; --player-6-border: #ff8bcb;
-    --player-7-bg: #1a237e; --player-7-border: #8c9eff;
+    --player-0-bg: #1a437a; --player-0-border: #8ab4f8; /* Blue */
+    --player-1-bg: #b31412; --player-1-border: #f28b82; /* Red */
+    --player-2-bg: #8c5d00; --player-2-border: #fdd663; /* Yellow */
+    --player-3-bg: #1b5e20; --player-3-border: #81c995; /* Green */
+    --player-4-bg: #4a148c; --player-4-border: #d7aefb; /* Purple */
+    --player-5-bg: #006064; --player-5-border: #78d9ec; /* Cyan */
+    --player-6-bg: #880e4f; --player-6-border: #ff8bcb; /* Pink */
+    --player-7-bg: #bf360c; --player-7-border: #ffab91; /* Deep Orange */
+    --player-8-bg: #33691e; --player-8-border: #c5e1a5; /* Light Green */
+    --player-9-bg: #004d40; --player-9-border: #80cbc4; /* Teal */
+    --player-10-bg: #3e2723; --player-10-border: #bcaaa4; /* Brown */
+    --player-11-bg: #263238; --player-11-border: #b0bec5; /* Blue Grey */
 }
 
 body.light-mode {
@@ -312,7 +316,7 @@ body.light-mode .header-display {
 
 .p-title { display: flex; align-items: center; gap: 15px; width: 100%; }
 .p-title input[type="checkbox"] { width: 24px; height: 24px; cursor: pointer; accent-color: var(--md-sys-color-primary); }
-.p-title input[type="text"] { font-family: 'Outfit', 'Noto Sans JP', sans-serif; font-size: 1.4rem; padding: 12px 15px; flex-grow: 1; background: var(--md-sys-color-surface-container-highest); border: none; color: inherit; border-radius: 12px; font-weight: 800; outline: none; transition: background 0.2s, box-shadow 0.2s; box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); }
+.p-title input[type="text"] { font-family: 'Outfit', 'Noto Sans JP', sans-serif; font-size: 1.4rem; padding: 12px 15px; flex-grow: 1; background: var(--md-sys-color-surface-container-highest); border: none; color: inherit; border-radius: 12px; font-weight: 800; outline: none; transition: background 0.2s, box-shadow 0.2s; box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); width: 100%; min-width: 0; }
 .p-title input[type="text"]:focus { background: var(--md-sys-color-surface-container-lowest); box-shadow: inset 0 0 0 2px var(--md-sys-color-primary); }
 
 .btn-big { border: none; padding: 25px 15px; font-size: 1.6rem; border-radius: 16px; cursor: pointer; flex: 1; font-weight: 900; transition: transform 0.1s, box-shadow 0.2s; font-family: 'Outfit', 'Noto Sans JP', sans-serif; box-shadow: var(--md-sys-elevation-1); }

@@ -130,10 +130,14 @@
                 </div>
             </div>
             
-            <!-- 巨大な早押しリセットボタン (FAB的) -->
-            <button class="btn-massive-reset" onclick="sendAction('resetBuzzer')">
-                🛑 早押しリセット (次へ)
-            </button>
+            <div style="display: flex; gap: 15px; margin-top: 10px;">
+                  <button class="btn-massive-reset" style="background: var(--md-sys-color-secondary); color: var(--md-sys-color-on-secondary);" onclick="sendAction('passBuzzer')">
+                      ⏭ 次の人へ
+                  </button>
+                  <button class="btn-massive-reset" onclick="sendAction('resetBuzzer')">
+                      🛑 全員リセット
+                  </button>
+              </div>
         </div>
 
         <div class="grid" id="controls">

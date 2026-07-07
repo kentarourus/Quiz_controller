@@ -222,22 +222,41 @@ body.light-mode .header-display {
 .maru { color: var(--success); }
 .batsu { color: var(--danger); }
 
-/* Winner State */
+/* Winner State (Champion) */
 .player-card.win { 
-    background: var(--md-sys-color-primary-container); 
-    color: var(--md-sys-color-on-primary-container); 
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 165, 0, 0.4));
+    color: var(--md-sys-color-on-surface); 
     transform: scale(1.05); 
-    box-shadow: var(--md-sys-elevation-5); 
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.5); 
     animation: pulseWin 2s infinite; 
     z-index: 2;
-    border-color: transparent;
+    border: 4px solid #ffd700;
 }
 .player-card.win .score-area {
     background-color: transparent;
     box-shadow: none;
 }
 @keyframes pulseWin { 0% { transform: scale(1.05); } 50% { transform: scale(1.08); } 100% { transform: scale(1.05); } }
-.player-card.win::before { content: "✨ 回答権獲得！"; position: absolute; top: 20px; right: 20px; color: var(--md-sys-color-primary); font-weight: 900; font-size: 1.2rem; background: var(--md-sys-color-on-primary); padding: 5px 15px; border-radius: 20px; box-shadow: var(--md-sys-elevation-1); }
+.player-card.win::before { content: "🏆 勝ち抜け！"; position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: #ffd700; color: #000; font-weight: 900; font-size: 1.5rem; padding: 5px 20px; border-radius: 20px; box-shadow: var(--md-sys-elevation-2); z-index: 10; }
+
+/* Buzzer Winner State */
+.player-card.buzzer-winner { 
+    transform: scale(1.05); 
+    box-shadow: 0 0 35px var(--p-color); 
+    animation: pulseBuzzer 1s infinite alternate; 
+    z-index: 5;
+}
+@keyframes pulseBuzzer { 0% { transform: scale(1.05); } 100% { transform: scale(1.08); } }
+.player-card.buzzer-winner::before { 
+    content: "✨ 回答権獲得！"; 
+    position: absolute; top: 20px; right: 20px; 
+    background: var(--p-color); 
+    color: #000; 
+    font-weight: 900; font-size: 1.2rem; 
+    padding: 5px 15px; border-radius: 20px; 
+    box-shadow: var(--md-sys-elevation-2); 
+    z-index: 10;
+}
 
 .player-card.eliminated { background-color: var(--md-sys-color-surface-container-highest); opacity: 0.6; transform: scale(0.95); box-shadow: none; }
 .player-card.eliminated::after { content: "脱落"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-10deg); color: var(--md-sys-color-error); font-size: 4rem; border: 6px solid var(--md-sys-color-error); padding: 10px 30px; border-radius: 20px; font-weight: 900; letter-spacing: 8px; box-shadow: var(--md-sys-elevation-2); background: var(--md-sys-color-surface); }
@@ -330,6 +349,7 @@ body.light-mode .header-display {
     .player-card, .board[class*="count-"] .player-card { width: 100% !important; margin-bottom: 15px; }
     .grid { grid-template-columns: 1fr; }
     .c-row { flex-direction: column; align-items: stretch; }
+    .score-adjuster-container { flex-direction: column; }
     .btn-big { width: 100%; margin-bottom: 10px; }
 }
 
@@ -367,6 +387,17 @@ body.light-mode .header-display {
     background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary);
     padding: 5px 15px; border-radius: 20px; font-weight: bold; font-size: 1.2rem;
     box-shadow: var(--md-sys-elevation-2); animation: pulseWin 1s infinite alternate;
+}
+
+/* Rank Badge for Buzzer Order */
+.rank-badge {
+    position: absolute; top: -15px; left: -15px;
+    background: var(--md-sys-color-tertiary); color: var(--md-sys-color-on-tertiary);
+    width: 45px; height: 45px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 1.5rem;
+    box-shadow: var(--md-sys-elevation-2);
+    z-index: 10; border: 3px solid var(--md-sys-color-surface);
 }
 
 /* Eliminated State Overhaul */

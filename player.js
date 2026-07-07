@@ -72,9 +72,17 @@ function updateBuzzerUI(isLocked, winnerId) {
         if (winnerId === myPlayerId) {
             btn.classList.remove('locked');
             btn.classList.add('winner');
-            btn.innerText = "⭐ 一番乗り！";
+            btn.innerHTML = "<div style='font-size: 0.5em; line-height: 1.2;'>🎉<br>あなたが<br>回答者です！</div>";
             statusText.innerText = "あなたが押しました！";
             overlay.style.display = 'block';
+            
+            // Haptic and visual flash
+            if (navigator.vibrate) navigator.vibrate([200, 100, 200, 100, 400]);
+            const originalBg = document.body.style.backgroundColor;
+            document.body.style.backgroundColor = 'var(--md-sys-color-primary)';
+            setTimeout(() => {
+                document.body.style.backgroundColor = originalBg;
+            }, 150);
         } else {
             btn.innerText = "❌ ロック中";
             statusText.innerText = `Player ${winnerId + 1} が解答権を獲得`;

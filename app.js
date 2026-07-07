@@ -10,7 +10,7 @@ let gameState = Array.from({ length: 8 }, (_, i) => ({
     status: 'active', 
     active: i < 4
 }));
-let buzzerState = { active: false, winnerId: null };
+let buzzerState = { active: false, queue: [], currentIndex: 0 };
 
 let audioCtx;
 
@@ -184,27 +184,27 @@ function startDisplayMode() {
                     broadcastState();
                 } else if (data.type === 'buzz') {
                     const pState = gameState.find(p => p.id === data.playerId);
-                    if (!buzzerState.active && pState && pState.status === 'active') {
-                        buzzerState.active = true;
-                        buzzerState.winnerId = data.playerId;
-                        playMaru(); // 早押し音（ピンポン）
+                    if (pState && pState.status === 'active' && !buzzerState.queue.includes(data.playerId)) {
+                        buzzerState.queue.push(data.playerId);
                         
-                        // プロジェクター画面で勝者をハイライト（WINアニメーションを一時的に付与）
-                        const card = document.getElementById(`player-card-${data.playerId}`);
-                        if (card) {
-                            card.classList.add('win');
+                        if (buzzerState.queue.length === 1) {
+                            buzzerState.active = true;
+                            playMaru(); // 早押し音（ピンポン）
                         }
-                        
+                        broadcastBuzzerState();
+                    }
+                } else if (data.type === 'passBuzzer') {
+                    if (buzzerState.active && buzzerState.currentIndex < buzzerState.queue.length - 1) {
+                        buzzerState.currentIndex++;
+                        playMaru(); // Play sound for the next person
+                        broadcastBuzzerState();
+                    } else {
+                        // No one else in queue, clear it
+                        buzzerState = { active: false, queue: [], currentIndex: 0 };
                         broadcastBuzzerState();
                     }
                 } else if (data.type === 'resetBuzzer') {
-                    buzzerState.active = false;
-                    buzzerState.winnerId = null;
-                    
-                    // ハイライト解除
-                    const cards = document.querySelectorAll('.player-card');
-                    cards.forEach(c => c.classList.remove('win'));
-                    
+                    buzzerState = { active: false, queue: [], currentIndex: 0 };
                     broadcastBuzzerState();
                 }
             });
@@ -222,6 +222,7 @@ function broadcastState() {
 
 function broadcastBuzzerState() {
     connections.forEach(c => { if (c.open) c.send({ type: 'buzzerState', state: buzzerState }); });
+    renderBoard();
 }
 
 function renderBoard() {
@@ -233,26 +234,31 @@ function renderBoard() {
     // Instead of completely re-rendering, update existing cards if possible to preserve animations
     activePlayers.forEach(p => {
         let card = document.getElementById(`player-card-${p.id}`);
+        const queueIndex = buzzerState.queue.indexOf(p.id);
+        const isBuzzerActive = buzzerState.active && queueIndex === buzzerState.currentIndex;
+        const isQueued = queueIndex !== -1;
+        
         if (!card) {
             card = document.createElement('div');
             card.id = `player-card-${p.id}`;
-            card.className = `player-card ${p.status} player-color-${p.id}`;
+            card.className = `player-card ${p.status} player-color-${p.id} ${isBuzzerActive ? 'buzzer-winner' : ''}`;
             card.innerHTML = `
                 ${p.status === 'eliminated' ? '<div class="eliminated-badge">脱落</div>' : ''}
+                ${isQueued ? `<div class="rank-badge">${queueIndex + 1}</div>` : ''}
                 <div class="player-name">${p.name}</div>
                 <div class="score-area">
                     <div class="score-box">
-                        <div class="score-label">〇 正解</div>
+                        <div class="score-label">○正解</div>
                         <div class="score-val maru" id="score-val-${p.id}">${p.score}</div>
                     </div>
                     <div class="score-box">
-                        <div class="score-label">✕ 誤答</div>
+                        <div class="score-label">✕誤答</div>
                         <div class="score-val batsu" id="penalty-val-${p.id}">${p.penalty}</div>
                     </div>
                 </div>`;
             board.appendChild(card);
         } else {
-            card.className = `player-card ${p.status} player-color-${p.id}`;
+            card.className = `player-card ${p.status} player-color-${p.id} ${isBuzzerActive ? 'buzzer-winner' : ''}`;
             card.querySelector('.player-name').innerText = p.name;
             const scoreEl = document.getElementById(`score-val-${p.id}`);
             const penaltyEl = document.getElementById(`penalty-val-${p.id}`);
@@ -265,6 +271,14 @@ function renderBoard() {
                 if (!elimBadge) card.insertAdjacentHTML('afterbegin', '<div class="eliminated-badge">脱落</div>');
             } else {
                 if (elimBadge) elimBadge.remove();
+            }
+            
+            let rankBadge = card.querySelector('.rank-badge');
+            if (isQueued) {
+                if (!rankBadge) card.insertAdjacentHTML('afterbegin', `<div class="rank-badge">${queueIndex + 1}</div>`);
+                else rankBadge.innerText = queueIndex + 1;
+            } else {
+                if (rankBadge) rankBadge.remove();
             }
         }
     });
@@ -346,15 +360,18 @@ function renderControls() {
     
     gameState.forEach((p, i) => {
         let card = document.getElementById(`control-card-${p.id}`);
-        const isBuzzerWinner = buzzerState.winnerId === p.id;
-        const baseClass = `control-card ${p.active ? 'active-player' : ''} ${isBuzzerWinner ? 'buzzer-winner-controller' : ''} player-color-${p.id}`;
+        const queueIndex = buzzerState.queue.indexOf(p.id);
+        const isBuzzerActive = buzzerState.active && queueIndex === buzzerState.currentIndex;
+        const isQueued = queueIndex !== -1;
+        const baseClass = `control-card ${p.active ? 'active-player' : ''} ${isBuzzerActive ? 'buzzer-winner-controller' : ''} player-color-${p.id}`;
         
         if (!card) {
             card = document.createElement('div');
             card.id = `control-card-${p.id}`;
             card.className = baseClass;
             card.innerHTML = `
-                ${isBuzzerWinner ? '<div class="controller-winner-badge">回答権！</div>' : ''}
+                ${isBuzzerActive ? '<div class="controller-winner-badge">回答権！</div>' : ''}
+                ${isQueued ? `<div class="rank-badge">${queueIndex + 1}</div>` : ''}
                 <div class="c-row">
                     <div class="p-title">
                         <input type="checkbox" id="chk-active-${p.id}" onchange="updatePlayer(${i}, 'active', this.checked)" ${p.active ? 'checked' : ''}>
@@ -362,12 +379,12 @@ function renderControls() {
                     </div>
                 </div>
                 <div class="c-row" style="gap: 15px;">
-                    <button class="btn-big c-btn-m" onclick="sendAction('playSound','maru'); updatePlayer(${i},'score',gameState[${i}].score+1)">〇 正解</button> 
-                    <button class="btn-big c-btn-b" onclick="sendAction('playSound','batsu'); updatePlayer(${i},'penalty',gameState[${i}].penalty+1)">✕ 誤答</button>
+                    <button class="btn-big c-btn-m" onclick="sendAction('playSound','maru'); updatePlayer(${i},'score',gameState[${i}].score+1)">○正解</button> 
+                    <button class="btn-big c-btn-b" onclick="sendAction('playSound','batsu'); updatePlayer(${i},'penalty',gameState[${i}].penalty+1)">✕誤答</button>
                 </div>
                 <div class="score-adjuster-container">
                     <div class="score-adjuster">
-                        <span class="score-adjuster-label" style="color: var(--success);">〇</span>
+                        <span class="score-adjuster-label" style="color: var(--success);">○</span>
                         <button class="step-btn" onclick="updatePlayer(${i},'score',gameState[${i}].score-1)">-</button> 
                         <span class="score-disp" id="disp-score-${p.id}">${p.score}</span> 
                         <button class="step-btn" onclick="updatePlayer(${i},'score',gameState[${i}].score+1)">+</button>
@@ -380,7 +397,7 @@ function renderControls() {
                     </div>
                 </div>
                 <div class="c-row">
-                    <span style="font-weight: 600;">状態:</span> 
+                    <span style="font-weight: 600;">状態</span> 
                     <select class="s-select" id="select-status-${p.id}" onchange="updatePlayer(${i}, 'status', this.value)">
                         <option value="active" ${p.status === 'active' ? 'selected' : ''}>通常</option>
                         <option value="win" ${p.status === 'win' ? 'selected' : ''}>勝ち抜け</option>
@@ -409,10 +426,18 @@ function renderControls() {
             if (selectStatus && selectStatus.value !== p.status) selectStatus.value = p.status;
 
             let badge = card.querySelector('.controller-winner-badge');
-            if (isBuzzerWinner) {
+            if (isBuzzerActive) {
                 if (!badge) card.insertAdjacentHTML('afterbegin', '<div class="controller-winner-badge">回答権！</div>');
             } else {
                 if (badge) badge.remove();
+            }
+            
+            let rankBadge = card.querySelector('.rank-badge');
+            if (isQueued) {
+                if (!rankBadge) card.insertAdjacentHTML('afterbegin', `<div class="rank-badge">${queueIndex + 1}</div>`);
+                else rankBadge.innerText = queueIndex + 1;
+            } else {
+                if (rankBadge) rankBadge.remove();
             }
         }
     });

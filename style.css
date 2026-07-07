@@ -27,7 +27,7 @@
     --md-sys-color-on-error-container: #fce8e6;
 
     /* Semantic equivalents for the app */
-    --success: #81c995;
+    --success: var(--md-sys-color-primary);
     --warning: #fdd663;
     --danger: var(--md-sys-color-error);
     --text-muted: #9aa0a6;
@@ -86,9 +86,9 @@ body.light-mode {
     --md-sys-color-error-container: #fce8e6;
     --md-sys-color-on-error-container: #a50e0e;
 
-    /* Semantic equivalents */
-    --success: #188038;
-    --warning: #f9ab00;
+    /* Semantic equivalents for the app */
+    --success: var(--md-sys-color-primary);
+    --warning: #e37400;
     --danger: var(--md-sys-color-error);
     --text-muted: #5f6368;
 

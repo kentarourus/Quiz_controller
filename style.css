@@ -168,8 +168,8 @@ body {
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     color: #ffffff; /* Explicitly white for dark navy contrast */
-    border: 4px solid var(--md-sys-color-primary); 
-    box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 25px color-mix(in srgb, var(--md-sys-color-primary) 50%, transparent); 
+    border: 1px solid rgba(255, 255, 255, 0.1); 
+    box-shadow: 0 15px 35px rgba(0,0,0,0.5); 
     text-align: center;
     width: 100%;
     max-width: 1400px; 
@@ -178,7 +178,8 @@ body {
 body.light-mode .header-display {
     color: var(--md-sys-color-on-surface);
     text-shadow: none;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.1), 0 0 20px color-mix(in srgb, var(--md-sys-color-primary) 30%, transparent);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    border-color: rgba(0, 0, 0, 0.1);
 }
 .header-display strong { color: var(--success); font-size: 5.5rem; margin-left: 10px; }
 

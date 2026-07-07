@@ -2,6 +2,7 @@
 
 :root {
     --page-bg: linear-gradient(135deg, #0f172a, #020617);
+    --card-bg: rgba(30, 41, 59, 0.7); /* slate-800 translucent to match navy */
     /* Google Brand Colors (Dark Theme) */
     --md-sys-color-primary: #8ab4f8;
     --md-sys-color-on-primary: #202124;
@@ -61,6 +62,7 @@
 
 body.light-mode {
     --page-bg: var(--md-sys-color-surface);
+    --card-bg: var(--md-sys-color-surface-container-high);
     /* Google Workspace / Pure White High-Contrast Palette */
     --md-sys-color-primary: #1a73e8;
     --md-sys-color-on-primary: #ffffff;
@@ -179,7 +181,9 @@ body {
     width: calc(25% - 30px); min-width: 280px; padding: 30px 20px; text-align: center; position: relative; overflow: hidden; 
     transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.3s cubic-bezier(0.2, 0, 0, 1), background 0.3s, border-color 0.3s; 
     display: flex; flex-direction: column; justify-content: center;
-    background: var(--md-sys-color-surface-container-high);
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border: solid var(--p-color, transparent);
     border-width: 12px 3px 3px 3px;
     border-radius: var(--md-sys-shape-corner-extra-large);
@@ -261,7 +265,9 @@ body {
 .control-card { padding: 25px; border-radius: var(--md-sys-shape-corner-extra-large); background: var(--md-sys-color-surface-container); transition: all 0.3s; position: relative; overflow: hidden; box-shadow: var(--md-sys-elevation-1); }
 .control-card:hover { box-shadow: var(--md-sys-elevation-2); transform: translateY(-2px); }
 .active-player { 
-    background: var(--md-sys-color-surface-container-highest);
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border: solid var(--p-color, var(--md-sys-color-primary)); 
     border-width: 12px 3px 3px 3px;
     box-shadow: 0 15px 50px -5px color-mix(in srgb, var(--p-color, var(--md-sys-color-primary)) 50%, transparent), var(--md-sys-elevation-4);

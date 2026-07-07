@@ -100,14 +100,18 @@ body.light-mode {
     --md-sys-elevation-5: 0px 4px 4px 0px rgba(0,0,0,0.15), 0px 8px 12px 6px rgba(0,0,0,0.05);
 
     /* Player Colors (Light) */
-    --player-0-bg: #e8f0fe; --player-0-border: #1a73e8;
-    --player-1-bg: #fce8e6; --player-1-border: #d93025;
-    --player-2-bg: #fef7e0; --player-2-border: #f9ab00;
-    --player-3-bg: #ceead6; --player-3-border: #188038;
-    --player-4-bg: #f3e8fd; --player-4-border: #9334e6;
-    --player-5-bg: #e4f7fb; --player-5-border: #12b5cb;
-    --player-6-bg: #fde7f3; --player-6-border: #e52592;
-    --player-7-bg: #e8eaf6; --player-7-border: #3f51b5;
+    --player-0-bg: #e8f0fe; --player-0-border: #1a73e8; /* Blue */
+    --player-1-bg: #fce8e6; --player-1-border: #d93025; /* Red */
+    --player-2-bg: #fef7e0; --player-2-border: #f9ab00; /* Yellow */
+    --player-3-bg: #ceead6; --player-3-border: #188038; /* Green */
+    --player-4-bg: #f3e8fd; --player-4-border: #9334e6; /* Purple */
+    --player-5-bg: #e4f7fb; --player-5-border: #12b5cb; /* Cyan */
+    --player-6-bg: #fde7f3; --player-6-border: #e52592; /* Pink */
+    --player-7-bg: #fbe9e7; --player-7-border: #e64a19; /* Deep Orange */
+    --player-8-bg: #f1f8e9; --player-8-border: #689f38; /* Light Green */
+    --player-9-bg: #e0f2f1; --player-9-border: #00897b; /* Teal */
+    --player-10-bg: #efebe9; --player-10-border: #6d4c41; /* Brown */
+    --player-11-bg: #eceff1; --player-11-border: #546e7a; /* Blue Grey */
 }
 
 .player-color-0 { --p-color: var(--player-0-border); }
@@ -118,6 +122,10 @@ body.light-mode {
 .player-color-5 { --p-color: var(--player-5-border); }
 .player-color-6 { --p-color: var(--player-6-border); }
 .player-color-7 { --p-color: var(--player-7-border); }
+.player-color-8 { --p-color: var(--player-8-border); }
+.player-color-9 { --p-color: var(--player-9-border); }
+.player-color-10 { --p-color: var(--player-10-border); }
+.player-color-11 { --p-color: var(--player-11-border); }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -310,7 +318,7 @@ body.light-mode .header-display {
 .btn-big { border: none; padding: 25px 15px; font-size: 1.6rem; border-radius: 16px; cursor: pointer; flex: 1; font-weight: 900; transition: transform 0.1s, box-shadow 0.2s; font-family: 'Outfit', 'Noto Sans JP', sans-serif; box-shadow: var(--md-sys-elevation-1); }
 .btn-big:hover { box-shadow: var(--md-sys-elevation-2); transform: translateY(-2px); }
 .btn-big:active { transform: scale(0.94); box-shadow: none; }
-.c-btn-m { flex: 1.5; background-color: var(--success); color: var(--md-sys-color-on-secondary); font-size: 1.8rem; }
+.c-btn-m { flex: 1.5; background-color: var(--success); color: var(--md-sys-color-on-primary); font-size: 1.8rem; }
 .c-btn-b { flex: 1; background-color: transparent; color: var(--md-sys-color-on-surface); border: 2px solid var(--md-sys-color-error); }
 
 .score-adjuster-container { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; width: 100%; }

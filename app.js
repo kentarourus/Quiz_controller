@@ -1,8 +1,8 @@
 let peer;
 let conn;
 let connections = [];
-let quizTitle = "クイズ大会";
-let gameState = Array.from({ length: 8 }, (_, i) => ({
+let quizTitle = localStorage.getItem('quizTitle') || "クイズ大会";
+let gameState = JSON.parse(localStorage.getItem('gameState')) || Array.from({ length: 12 }, (_, i) => ({
     id: i, 
     name: `Player ${i + 1}`, 
     score: 0, 
@@ -10,7 +10,7 @@ let gameState = Array.from({ length: 8 }, (_, i) => ({
     status: 'active', 
     active: i < 4
 }));
-let buzzerState = { active: false, queue: [], currentIndex: 0 };
+let buzzerState = JSON.parse(localStorage.getItem('buzzerState')) || { active: false, queue: [], currentIndex: 0 };
 
 let audioCtx;
 
@@ -111,6 +111,7 @@ function startDisplayMode() {
         peer = new Peer(pin);
         
         peer.on('open', (id) => {
+            localStorage.setItem('quiz_pin', id);
             document.getElementById('peer-id').innerText = id;
             
             // Generate QR Code for player.html
@@ -178,6 +179,15 @@ function startDisplayMode() {
                 } else if (data.type === 'resetAll') {
                     gameState = gameState.map(p => ({ ...p, score: 0, penalty: 0, status: 'active' }));
                     broadcastState();
+                } else if (data.type === 'forceSync') {
+                    gameState = data.state;
+                    buzzerState = data.buzzerState;
+                    if (data.title) {
+                        quizTitle = data.title;
+                        document.getElementById('display-quiz-title').innerText = quizTitle;
+                    }
+                    broadcastState();
+                    broadcastBuzzerState();
                 } else if (data.type === 'updateTitle') {
                     quizTitle = data.title;
                     document.getElementById('display-quiz-title').innerText = quizTitle;
@@ -211,16 +221,20 @@ function startDisplayMode() {
         });
     }
 
-    initPeer(generatePin());
+    const savedPin = localStorage.getItem('quiz_pin');
+    initPeer(savedPin || generatePin());
     renderBoard();
 }
 
 function broadcastState() {
+    localStorage.setItem('gameState', JSON.stringify(gameState));
+    localStorage.setItem('quizTitle', quizTitle);
     renderBoard();
     connections.forEach(c => { if (c.open) c.send({ type: 'sync', state: gameState, title: quizTitle }); });
 }
 
 function broadcastBuzzerState() {
+    localStorage.setItem('buzzerState', JSON.stringify(buzzerState));
     connections.forEach(c => { if (c.open) c.send({ type: 'buzzerState', state: buzzerState }); });
     renderBoard();
 }
@@ -346,8 +360,20 @@ function connectToDisplay() {
         }
     });
     
+    conn.on('close', () => {
+        const statusMsg = document.getElementById('status-msg');
+        if (statusMsg) {
+            statusMsg.innerText = "接続が切れました。再接続中...";
+            setTimeout(() => connectToDisplay(), 3000);
+        }
+    });
+
     conn.on('error', () => { 
-        document.getElementById('status-msg').innerText = "接続失敗。IDを確認してください。"; 
+        const statusMsg = document.getElementById('status-msg');
+        if (statusMsg) {
+            statusMsg.innerText = "接続エラー。再接続を試みます...";
+            setTimeout(() => connectToDisplay(), 3000);
+        }
     });
 }
 
@@ -495,7 +521,13 @@ function toggleFullscreen() {
 
 function sendAction(type, sound = null) {
     if (type === 'resetAll' && !confirm('全員のスコアと状態をリセットしますか？')) return;
-    if (conn && conn.open) conn.send({ type, sound });
+    if (conn && conn.open) {
+        if (type === 'forceSync') {
+            conn.send({ type: 'forceSync', state: gameState, buzzerState: buzzerState, title: quizTitle });
+        } else {
+            conn.send({ type, sound });
+        }
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {

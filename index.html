@@ -99,23 +99,31 @@
         </div>
 
         <div class="global-controls" id="global-controls">
-            <div class="control-row" style="width: 100%; justify-content: flex-start; gap: 15px; border-bottom: 1px solid var(--md-sys-color-surface-container-highest); padding-bottom: 15px;">
-                <label style="font-weight:600;">🏆 大会名:</label>
-                <input type="text" id="quiz-title-input" placeholder="大会名を入力" style="font-family: 'Outfit', 'Noto Sans JP', sans-serif; font-size: 1.1rem; padding: 10px 15px; border-radius: 12px; border: none; background: var(--md-sys-color-surface-container-highest); color: var(--md-sys-color-on-surface); outline: none; flex-grow: 1; max-width: 300px; font-weight: 700;" onchange="updateQuizTitle(this.value)">
-                
-                <div style="width: 20px;"></div><!-- スペーサー -->
+                <div class="control-row" style="width: 100%; justify-content: flex-start; gap: 15px; border-bottom: 1px solid var(--md-sys-color-surface-container-highest); padding-bottom: 15px; align-items: center;">
+                    <label style="font-weight:600;">🏆 大会名:</label>
+                    <input type="text" id="quiz-title-input" placeholder="大会名を入力" style="font-family: 'Outfit', 'Noto Sans JP', sans-serif; font-size: 1.1rem; padding: 10px 15px; border-radius: 12px; border: none; background: var(--md-sys-color-surface-container-highest); color: var(--md-sys-color-on-surface); outline: none; flex-grow: 1; max-width: 300px; font-weight: 700;" onchange="updateQuizTitle(this.value)">
+                    
+                    <div style="width: 10px;"></div><!-- スペーサー -->
+    
+                    <label style="font-weight:600;">👤 表示人数:</label>
+                    <select id="bulk-count" class="count-selector" onchange="changePlayerCount(this.value)">
+                        <option value="2">2人</option>
+                        <option value="3">3人</option>
+                        <option value="4" selected>4人</option>
+                        <option value="5">5人</option>
+                        <option value="6">6人</option>
+                        <option value="7">7人</option>
+                        <option value="8">8人</option>
+                        <option value="9">9人</option>
+                        <option value="10">10人</option>
+                        <option value="11">11人</option>
+                        <option value="12">12人</option>
+                    </select>
 
-                <label style="font-weight:600;">👤 表示人数:</label>
-                <select id="bulk-count" class="count-selector" onchange="changePlayerCount(this.value)">
-                    <option value="2">2人</option>
-                    <option value="3">3人</option>
-                    <option value="4" selected>4人</option>
-                    <option value="5">5人</option>
-                    <option value="6">6人</option>
-                    <option value="7">7人</option>
-                    <option value="8">8人</option>
-                </select>
-            </div>
+                    <button class="nav-btn-invite" style="margin-left: auto; background: var(--md-sys-color-tertiary) !important; color: var(--md-sys-color-on-tertiary) !important;" onclick="sendAction('forceSync')">
+                        <span class="material-symbols-rounded">sync</span> 状態をホストに強制同期
+                    </button>
+                </div>
             
             <div class="control-row" style="justify-content: space-between;">
                 <!-- 音声系グループ -->

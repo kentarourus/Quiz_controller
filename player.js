@@ -14,8 +14,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+let targetId;
+
 function joinGame() {
-    const targetId = document.getElementById('target-id').value.trim();
+    targetId = document.getElementById('target-id').value.trim();
     myPlayerId = parseInt(document.getElementById('player-select').value, 10);
     
     if (!targetId) {
@@ -25,37 +27,46 @@ function joinGame() {
     
     document.getElementById('msg').innerText = "接続中...";
     
-    peer = new Peer();
+    if (!peer) {
+        peer = new Peer();
+        peer.on('open', () => {
+            connectToHost();
+        });
+        peer.on('error', (err) => {
+            document.getElementById('msg').innerText = "Peer接続エラー: " + err.type;
+        });
+    } else {
+        connectToHost();
+    }
+}
+
+function connectToHost() {
+    conn = peer.connect(targetId);
     
-    peer.on('open', () => {
-        conn = peer.connect(targetId);
-        
-        conn.on('open', () => {
-            document.getElementById('setup-screen').style.display = 'none';
-            document.getElementById('buzzer-screen').style.display = 'flex';
-            updateBuzzerUI(false, null); // 初期状態はアンロック
-        });
-        
-        conn.on('data', (data) => {
-            if (data.type === 'buzzerState') {
-                updateBuzzerUI(data.state.active, data.state.winnerId);
-            }
-        });
-        
-        conn.on('close', () => {
-            document.getElementById('status-text').innerText = "ホストから切断されました";
-            const btn = document.getElementById('buzzer-btn');
-            btn.classList.add('locked');
-            myBuzzerActive = false;
-        });
-        
-        conn.on('error', () => {
-            document.getElementById('msg').innerText = "接続エラー";
-        });
+    conn.on('open', () => {
+        document.getElementById('setup-screen').style.display = 'none';
+        document.getElementById('buzzer-screen').style.display = 'flex';
+        updateBuzzerUI(false, null);
     });
     
-    peer.on('error', (err) => {
-        document.getElementById('msg').innerText = "Peer接続エラー: " + err.type;
+    conn.on('data', (data) => {
+        if (data.type === 'buzzerState') {
+            const winnerId = data.state.active && data.state.queue ? data.state.queue[data.state.currentIndex] : null;
+            updateBuzzerUI(data.state.active, winnerId);
+        }
+    });
+    
+    conn.on('close', () => {
+        document.getElementById('status-text').innerText = "ホストから切断されました。再接続中...";
+        const btn = document.getElementById('buzzer-btn');
+        btn.classList.add('locked');
+        myBuzzerActive = false;
+        setTimeout(() => connectToHost(), 3000);
+    });
+    
+    conn.on('error', () => {
+        document.getElementById('status-text').innerText = "接続エラー。再接続を試みます...";
+        setTimeout(() => connectToHost(), 3000);
     });
 }
 

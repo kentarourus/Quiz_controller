@@ -178,7 +178,9 @@ function startDisplayMode() {
                     if (data.sound === 'batsu') playBatsu();
                 } else if (data.type === 'resetAll') {
                     gameState = gameState.map(p => ({ ...p, score: 0, penalty: 0, status: 'active' }));
+                    buzzerState = { active: false, queue: [], currentIndex: 0 };
                     broadcastState();
+                    broadcastBuzzerState();
                 } else if (data.type === 'forceSync') {
                     gameState = data.state;
                     buzzerState = data.buzzerState;
@@ -259,7 +261,7 @@ function renderBoard() {
             card.className = `player-card ${p.status} player-color-${p.id} ${isBuzzerActive ? 'buzzer-winner' : ''}`;
             card.innerHTML = `
                 ${p.status === 'eliminated' ? '<div class="eliminated-badge">脱落</div>' : ''}
-                ${isQueued ? `<div class="rank-badge">${queueIndex + 1}${queueIndex > 0 ? `<div class="delta-badge">+${((queueEntry.time - buzzerState.queue[0].time) / 1000).toFixed(2)}s</div>` : ''}</div>` : ''}
+                ${isQueued ? `<div class="buzzer-info-bar rank-${queueIndex < 3 ? queueIndex + 1 : 'other'}"><span>${queueIndex + 1}位</span>${queueIndex > 0 ? `<span class="delta-badge">+${((queueEntry.time - buzzerState.queue[0].time) / 1000).toFixed(2)}s</span>` : ''}</div>` : ''}
                 <div class="player-name">${p.name}</div>
                 <div class="score-area">
                     <div class="score-box">
@@ -288,11 +290,16 @@ function renderBoard() {
                 if (elimBadge) elimBadge.remove();
             }
             
-            let rankBadge = card.querySelector('.rank-badge');
+            let rankBadge = card.querySelector('.buzzer-info-bar');
             if (isQueued) {
-                const deltaHtml = queueIndex > 0 ? `<div class="delta-badge">+${((queueEntry.time - buzzerState.queue[0].time) / 1000).toFixed(2)}s</div>` : '';
-                if (!rankBadge) card.insertAdjacentHTML('afterbegin', `<div class="rank-badge">${queueIndex + 1}${deltaHtml}</div>`);
-                else rankBadge.innerHTML = `${queueIndex + 1}${deltaHtml}`;
+                const rankClass = `rank-${queueIndex < 3 ? queueIndex + 1 : 'other'}`;
+                const deltaHtml = queueIndex > 0 ? `<span class="delta-badge">+${((queueEntry.time - buzzerState.queue[0].time) / 1000).toFixed(2)}s</span>` : '';
+                const inner = `<span>${queueIndex + 1}位</span>${deltaHtml}`;
+                if (!rankBadge) card.insertAdjacentHTML('afterbegin', `<div class="buzzer-info-bar ${rankClass}">${inner}</div>`);
+                else {
+                    rankBadge.className = `buzzer-info-bar ${rankClass}`;
+                    rankBadge.innerHTML = inner;
+                }
             } else {
                 if (rankBadge) rankBadge.remove();
             }
@@ -321,8 +328,10 @@ function triggerScoreAnimation(playerId, type) {
 
 // --- Controller Mode ---
 function startControllerMode(autoConnectId = null) {
+    initAudio();
     document.getElementById('mode-selection').style.display = 'none';
-    document.getElementById('controller-mode').style.display = 'block';
+    document.getElementById('controller-mode').style.display = 'flex';
+    document.body.style.overflow = 'hidden'; // Prevent body scroll in controller mode
     peer = new Peer();
     
     if (autoConnectId) {
@@ -400,7 +409,7 @@ function renderControls() {
             card.className = baseClass;
             card.innerHTML = `
                 ${isBuzzerActive ? '<div class="controller-winner-badge">回答権！</div>' : ''}
-                ${isQueued ? `<div class="rank-badge">${queueIndex + 1}${queueIndex > 0 ? `<div class="delta-badge">+${((queueEntry.time - buzzerState.queue[0].time) / 1000).toFixed(2)}s</div>` : ''}</div>` : ''}
+                ${isQueued ? `<div class="buzzer-info-bar rank-${queueIndex < 3 ? queueIndex + 1 : 'other'}"><span>${queueIndex + 1}位</span>${queueIndex > 0 ? `<span class="delta-badge">+${((queueEntry.time - buzzerState.queue[0].time) / 1000).toFixed(2)}s</span>` : ''}</div>` : ''}
                 <div class="c-row">
                     <div class="p-title">
                         <input type="checkbox" id="chk-active-${p.id}" onchange="updatePlayer(${i}, 'active', this.checked)" ${p.active ? 'checked' : ''}>
@@ -461,11 +470,16 @@ function renderControls() {
                 if (badge) badge.remove();
             }
             
-            let rankBadge = card.querySelector('.rank-badge');
+            let rankBadge = card.querySelector('.buzzer-info-bar');
             if (isQueued) {
-                const deltaHtml = queueIndex > 0 ? `<div class="delta-badge">+${((queueEntry.time - buzzerState.queue[0].time) / 1000).toFixed(2)}s</div>` : '';
-                if (!rankBadge) card.insertAdjacentHTML('afterbegin', `<div class="rank-badge">${queueIndex + 1}${deltaHtml}</div>`);
-                else rankBadge.innerHTML = `${queueIndex + 1}${deltaHtml}`;
+                const rankClass = `rank-${queueIndex < 3 ? queueIndex + 1 : 'other'}`;
+                const deltaHtml = queueIndex > 0 ? `<span class="delta-badge">+${((queueEntry.time - buzzerState.queue[0].time) / 1000).toFixed(2)}s</span>` : '';
+                const inner = `<span>${queueIndex + 1}位</span>${deltaHtml}`;
+                if (!rankBadge) card.insertAdjacentHTML('afterbegin', `<div class="buzzer-info-bar ${rankClass}">${inner}</div>`);
+                else {
+                    rankBadge.className = `buzzer-info-bar ${rankClass}`;
+                    rankBadge.innerHTML = inner;
+                }
             } else {
                 if (rankBadge) rankBadge.remove();
             }

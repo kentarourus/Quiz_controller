@@ -294,8 +294,7 @@ body.light-mode .header-display {
 
 .buzzer-winner-controller { border: 3px solid var(--md-sys-color-primary) !important; transform: scale(1.02); z-index: 10; box-shadow: var(--md-sys-elevation-3) !important; }
 
-/* Controller Mode */
-#controller-mode { display: none; padding: 15px; max-width: 800px; margin: 0 auto; padding-bottom: 120px; }
+#controller-mode { display: none; padding: 15px; max-width: 1200px; margin: 0 auto; height: 100vh; flex-direction: column; overflow: hidden; }
 .setup-area { padding: 40px 20px; text-align: center; margin-bottom: 20px; background: var(--md-sys-color-surface-container); border-radius: var(--md-sys-shape-corner-extra-large); box-shadow: var(--md-sys-elevation-2); }
 .setup-area h2 { margin-bottom: 20px; font-weight: 700; font-size: 1.8rem; }
 .setup-area input { font-family: 'Outfit', sans-serif; font-size: 2rem; padding: 20px; width: 100%; max-width: 320px; text-align: center; background: var(--md-sys-color-surface-container-lowest); border: 2px solid var(--md-sys-color-primary); color: var(--md-sys-color-on-surface); border-radius: 16px; margin-bottom: 25px; outline: none; transition: all 0.3s; font-weight: 800; letter-spacing: 5px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
@@ -304,7 +303,7 @@ body.light-mode .header-display {
 .setup-area button:hover { transform: translateY(-4px); box-shadow: var(--md-sys-elevation-3); }
 .setup-area button:active { transform: translateY(0); box-shadow: none; }
 
-.global-controls { padding: 25px 20px; margin-bottom: 25px; display: none; background: var(--md-sys-color-surface-container); border-radius: var(--md-sys-shape-corner-extra-large); flex-direction: column; gap: 20px; box-shadow: var(--md-sys-elevation-2); }
+.global-controls { padding: 25px 20px; margin-bottom: 25px; display: none; background: var(--md-sys-color-surface-container); border-radius: var(--md-sys-shape-corner-extra-large); flex-direction: column; gap: 20px; box-shadow: var(--md-sys-elevation-2); flex-shrink: 0; }
 .control-row { display: flex; flex-wrap: wrap; gap: 15px; align-items: center; justify-content: flex-start; }
 .control-row label { font-size: 1.1rem; color: var(--text-muted); font-weight: 700; }
 
@@ -318,7 +317,7 @@ body.light-mode .header-display {
 .btn-sound-b { background-color: var(--md-sys-color-error-container); color: var(--md-sys-color-on-error-container); }
 .btn-action[onclick*="resetBuzzer"] { background-color: var(--md-sys-color-primary-container) !important; color: var(--md-sys-color-on-primary-container) !important; }
 
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; display: none; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; display: none; flex-grow: 1; overflow-y: auto; padding-bottom: 30px; align-content: flex-start; }
 
 .control-card { padding: 25px; border-radius: var(--md-sys-shape-corner-extra-large); background: var(--md-sys-color-surface-container); transition: all 0.3s; position: relative; overflow: hidden; box-shadow: var(--md-sys-elevation-1); }
 .control-card:hover { box-shadow: var(--md-sys-elevation-2); transform: translateY(-2px); }
@@ -415,26 +414,31 @@ body.light-mode .header-display {
     box-shadow: var(--md-sys-elevation-2); animation: pulseWin 1s infinite alternate;
 }
 
-/* Rank Badge for Buzzer Order */
-.rank-badge {
-    position: absolute; top: -15px; left: -15px;
-    background: var(--md-sys-color-tertiary); color: var(--md-sys-color-on-tertiary);
-    width: 60px; height: 60px;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    font-size: 2rem; font-weight: 900;
-    border-radius: 50%; box-shadow: var(--md-sys-elevation-3);
-    z-index: 5;
+/* Buzzer Info Bar (Replacement for old floating badge) */
+.buzzer-info-bar {
+    width: 100%;
+    padding: 6px 12px;
+    font-size: 1.2rem;
+    font-weight: 800;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     font-family: 'Outfit', 'Noto Sans JP', sans-serif;
-    border: 4px solid var(--md-sys-color-surface-container);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
 }
+.buzzer-info-bar.rank-1 { background: #ffd700; color: #000; box-shadow: 0 4px 10px rgba(255, 215, 0, 0.4); border: 2px solid #daa520; }
+.buzzer-info-bar.rank-2 { background: #e0e0e0; color: #000; border: 2px solid #9e9e9e; }
+.buzzer-info-bar.rank-3 { background: #cd7f32; color: #fff; border: 2px solid #a0522d; }
+.buzzer-info-bar.rank-other { background: var(--md-sys-color-surface-variant); color: var(--md-sys-color-on-surface-variant); }
+
 .delta-badge {
-    font-size: 0.35em;
+    font-size: 0.85em;
     font-weight: 700;
-    line-height: 1;
-    margin-top: -3px;
     opacity: 0.9;
 }
-.hide-queue-order .rank-badge {
+.hide-queue-order .buzzer-info-bar {
     display: none !important;
 }
 

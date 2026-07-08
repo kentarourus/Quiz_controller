@@ -260,7 +260,15 @@ body.light-mode .header-display {
     box-shadow: none;
 }
 @keyframes pulseWin { 0% { transform: scale(1.05); } 50% { transform: scale(1.08); } 100% { transform: scale(1.05); } }
-.player-card.win::before { content: "🏆 勝ち抜け！"; position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: #ffd700; color: #000; font-weight: 900; font-size: 1.5rem; padding: 5px 20px; border-radius: 20px; box-shadow: var(--md-sys-elevation-2); z-index: 10; }
+.player-card.win::before { 
+    content: "🏆"; 
+    position: absolute; 
+    top: 5%; 
+    right: 5%; 
+    font-size: min(4rem, 10vw);
+    z-index: 10;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+}
 
 /* Buzzer Winner State */
 .player-card.buzzer-winner { 

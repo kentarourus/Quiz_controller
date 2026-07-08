@@ -196,10 +196,10 @@ body.light-mode .header-display {
 }
 .header-display strong { color: var(--success); font-size: 5.5rem; margin-left: 10px; }
 
-.board { display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; width: 100%; max-width: 1800px; }
+.board { display: grid; gap: 30px; width: 100%; max-width: 1800px; flex: 1; align-content: stretch; }
 
 .player-card {
-    width: calc(25% - 30px); min-width: 280px; padding: 30px 20px; text-align: center; position: relative; overflow: hidden; 
+    padding: 30px 20px; text-align: center; position: relative; overflow: hidden; 
     transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.3s cubic-bezier(0.2, 0, 0, 1), background 0.3s, border-color 0.3s; 
     display: flex; flex-direction: column; justify-content: center;
     background: var(--card-bg);
@@ -211,16 +211,17 @@ body.light-mode .header-display {
     box-shadow: 0 10px 40px -10px color-mix(in srgb, var(--p-color, transparent) 30%, transparent), var(--md-sys-elevation-2);
 }
 
-.board.count-1 .player-card { width: 100%; max-width: 800px; }
-.board.count-2 .player-card { width: calc(50% - 30px); max-width: 800px; }
-.board.count-3 .player-card { width: calc(33.333% - 30px); max-width: 600px; }
-.board.count-4 .player-card { width: calc(50% - 30px); max-width: 600px; }
-.board.count-5 .player-card, .board.count-6 .player-card { width: calc(33.333% - 30px); max-width: 500px; }
-.board.count-7 .player-card { width: calc(25% - 30px); max-width: 400px; }
-.board.count-8 .player-card, .board.count-9 .player-card, .board.count-10 .player-card, .board.count-11 .player-card, .board.count-12 .player-card { 
-    width: calc(25% - 15px); max-width: 400px; padding: 15px 10px; 
-}
+.board.count-1 { grid-template-columns: 1fr; grid-template-rows: 1fr; }
+.board.count-2 { grid-template-columns: repeat(2, 1fr); grid-template-rows: 1fr; }
+.board.count-3 { grid-template-columns: repeat(3, 1fr); grid-template-rows: 1fr; }
+.board.count-4 { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 1fr); }
+.board.count-5, .board.count-6 { grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); }
+.board.count-7, .board.count-8 { grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 1fr); }
+.board.count-9 { grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); }
+.board.count-10, .board.count-11, .board.count-12 { grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(3, 1fr); }
+
 .board.count-8, .board.count-9, .board.count-10, .board.count-11, .board.count-12 { gap: 15px; }
+.board.count-9 .player-card, .board.count-10 .player-card, .board.count-11 .player-card, .board.count-12 .player-card { padding: 15px 10px; }
 
 .player-name { font-size: 2.2rem; font-weight: 800; margin-bottom: 20px; word-break: break-all; letter-spacing: -0.02em; }
 
@@ -229,10 +230,10 @@ body.light-mode .header-display {
 .board.count-3 .player-name { font-size: 2.8rem; } .board.count-3 .score-val { font-size: 7rem; } .board.count-3 .score-label { font-size: 1.3rem; }
 .board.count-4 .player-name { font-size: 2.8rem; } .board.count-4 .score-val { font-size: 7rem; } .board.count-4 .score-label { font-size: 1.3rem; }
 .board.count-5 .player-name, .board.count-6 .player-name { font-size: 2.2rem; } .board.count-5 .score-val, .board.count-6 .score-val { font-size: 6rem; }
-.board.count-7 .player-name { font-size: 2rem; } .board.count-7 .score-val { font-size: 5.5rem; }
-.board.count-8 .player-name, .board.count-9 .player-name, .board.count-10 .player-name, .board.count-11 .player-name, .board.count-12 .player-name { font-size: 1.6rem; margin-bottom: 10px; }
-.board.count-8 .score-val, .board.count-9 .score-val, .board.count-10 .score-val, .board.count-11 .score-val, .board.count-12 .score-val { font-size: 4.2rem; }
-.board.count-8 .score-label, .board.count-9 .score-label, .board.count-10 .score-label, .board.count-11 .score-label, .board.count-12 .score-label { display: none; }
+.board.count-8 .player-name { font-size: 1.8rem; } .board.count-8 .score-val { font-size: 5rem; }
+.board.count-9 .player-name, .board.count-10 .player-name, .board.count-11 .player-name, .board.count-12 .player-name { font-size: 1.6rem; margin-bottom: 10px; }
+.board.count-9 .score-val, .board.count-10 .score-val, .board.count-11 .score-val, .board.count-12 .score-val { font-size: 4.2rem; }
+.board.count-9 .score-label, .board.count-10 .score-label, .board.count-11 .score-label, .board.count-12 .score-label { display: none; }
 
 .score-area { display: flex; justify-content: space-around; align-items: center; padding: 15px 0; }
 .score-box { text-align: center; width: 45%; position: relative; z-index: 2; }
@@ -359,14 +360,9 @@ body.light-mode .header-display {
 .setting-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 25px; background: var(--md-sys-color-surface-container-high); border-radius: 16px; font-size: 1.2rem; font-weight: bold; box-shadow: var(--md-sys-elevation-1); }
 
 @media (max-width: 768px) {
-    .player-card, .board[class*="count-"] .player-card { width: calc(50% - 20px) !important; min-width: 200px; padding: 25px 15px; }
-    .player-name, .board[class*="count-"] .player-name { font-size: 1.8rem !important; }
-    .score-val, .board[class*="count-"] .score-val { font-size: 4.5rem !important; }
-    .score-label, .board[class*="count-"] .score-label { font-size: 1rem !important; }
     .btn-big { font-size: 1.4rem; padding: 20px 10px; }
 }
 @media (max-width: 480px) {
-    .player-card, .board[class*="count-"] .player-card { width: 100% !important; margin-bottom: 15px; }
     .grid { grid-template-columns: 1fr; }
     .c-row { flex-direction: column; align-items: stretch; }
     .score-adjuster-container { flex-direction: column; }

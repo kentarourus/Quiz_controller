@@ -384,6 +384,7 @@ body.light-mode .header-display {
         flex-direction: row;
         gap: 40px;
         padding: 20px;
+        max-width: 100%; /* Use full screen width */
     }
     .global-controls {
         width: 280px; /* Reduced width to remove wasted horizontal space */

@@ -382,11 +382,11 @@ body.light-mode .header-display {
 @media (orientation: landscape) {
     #controller-mode {
         flex-direction: row;
-        gap: 20px;
+        gap: 40px;
         padding: 20px;
     }
     .global-controls {
-        width: 340px; /* Fixed width for controls on the left */
+        width: 280px; /* Reduced width to remove wasted horizontal space */
         height: calc(100vh - 40px);
         overflow-y: auto;
         margin-bottom: 0;
@@ -399,6 +399,11 @@ body.light-mode .header-display {
         grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); /* Fit about 3-4 cards horizontally on PC */
         gap: 15px;
     }
+    
+    /* Remove wasted space in player cards */
+    .control-card { padding: 15px; }
+    .c-row { margin-bottom: 12px; }
+    .score-adjuster-container { margin-bottom: 12px; }
 }
 
 /* Extra compact for mobile/short screens (Controller) */

@@ -167,19 +167,20 @@ body {
 .btn-mode:active { transform: translateY(0); box-shadow: var(--md-sys-elevation-1); }
 
 /* Display Mode */
-#display-mode { display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+#display-mode { display: none; flex-direction: column; align-items: center; justify-content: flex-start; height: 100vh; padding: 20px; overflow: hidden; box-sizing: border-box; }
 
 .header-display { 
     padding: 25px 80px; 
-    margin-bottom: 40px; 
+    margin-bottom: 20px; 
     font-size: 4.5rem; 
     font-weight: 900; 
-    letter-spacing: 4px; 
-    border-radius: var(--md-sys-shape-corner-extra-large); 
+    text-align: center; 
+    letter-spacing: 2px;
     background: var(--card-bg);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    color: #ffffff; /* Explicitly white for dark navy contrast */
+    border-radius: var(--md-sys-shape-corner-extra-large);
+    box-shadow: var(--md-sys-elevation-2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1); 
     box-shadow: 0 15px 35px rgba(0,0,0,0.5); 
     text-align: center;
@@ -215,7 +216,11 @@ body.light-mode .header-display {
 .board.count-3 .player-card { width: calc(33.333% - 30px); max-width: 600px; }
 .board.count-4 .player-card { width: calc(50% - 30px); max-width: 600px; }
 .board.count-5 .player-card, .board.count-6 .player-card { width: calc(33.333% - 30px); max-width: 500px; }
-.board.count-7 .player-card, .board.count-8 .player-card { width: calc(25% - 30px); max-width: 400px; }
+.board.count-7 .player-card { width: calc(25% - 30px); max-width: 400px; }
+.board.count-8 .player-card, .board.count-9 .player-card, .board.count-10 .player-card, .board.count-11 .player-card, .board.count-12 .player-card { 
+    width: calc(25% - 15px); max-width: 400px; padding: 15px 10px; 
+}
+.board.count-8, .board.count-9, .board.count-10, .board.count-11, .board.count-12 { gap: 15px; }
 
 .player-name { font-size: 2.2rem; font-weight: 800; margin-bottom: 20px; word-break: break-all; letter-spacing: -0.02em; }
 
@@ -224,7 +229,10 @@ body.light-mode .header-display {
 .board.count-3 .player-name { font-size: 2.8rem; } .board.count-3 .score-val { font-size: 7rem; } .board.count-3 .score-label { font-size: 1.3rem; }
 .board.count-4 .player-name { font-size: 2.8rem; } .board.count-4 .score-val { font-size: 7rem; } .board.count-4 .score-label { font-size: 1.3rem; }
 .board.count-5 .player-name, .board.count-6 .player-name { font-size: 2.2rem; } .board.count-5 .score-val, .board.count-6 .score-val { font-size: 6rem; }
-.board.count-7 .player-name, .board.count-8 .player-name { font-size: 2rem; } .board.count-7 .score-val, .board.count-8 .score-val { font-size: 5.5rem; }
+.board.count-7 .player-name { font-size: 2rem; } .board.count-7 .score-val { font-size: 5.5rem; }
+.board.count-8 .player-name, .board.count-9 .player-name, .board.count-10 .player-name, .board.count-11 .player-name, .board.count-12 .player-name { font-size: 1.6rem; margin-bottom: 10px; }
+.board.count-8 .score-val, .board.count-9 .score-val, .board.count-10 .score-val, .board.count-11 .score-val, .board.count-12 .score-val { font-size: 4.2rem; }
+.board.count-8 .score-label, .board.count-9 .score-label, .board.count-10 .score-label, .board.count-11 .score-label, .board.count-12 .score-label { display: none; }
 
 .score-area { display: flex; justify-content: space-around; align-items: center; padding: 15px 0; }
 .score-box { text-align: center; width: 45%; position: relative; z-index: 2; }

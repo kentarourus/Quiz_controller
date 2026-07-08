@@ -9,7 +9,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <!-- Include Custom Stylesheet -->
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,600,0,0" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css?v=41">
+    <link rel="stylesheet" href="style.css?v=42">
 </head>
 <body>
 
@@ -99,32 +99,36 @@
         </div>
 
         <div class="global-controls" id="global-controls">
-                <div class="control-row" style="width: 100%; justify-content: flex-start; gap: 15px; border-bottom: 1px solid var(--md-sys-color-surface-container-highest); padding-bottom: 15px; align-items: center;">
-                    <label style="font-weight:600;">🏆 大会名:</label>
-                    <input type="text" id="quiz-title-input" placeholder="大会名を入力" style="font-family: 'Outfit', 'Noto Sans JP', sans-serif; font-size: 1.1rem; padding: 10px 15px; border-radius: 12px; border: none; background: var(--md-sys-color-surface-container-highest); color: var(--md-sys-color-on-surface); outline: none; flex-grow: 1; max-width: 300px; font-weight: 700;" onchange="updateQuizTitle(this.value)">
+                <div class="control-row" style="flex-direction: column; align-items: stretch; gap: 15px; border-bottom: 1px solid var(--md-sys-color-surface-container-highest); padding-bottom: 15px; width: 100%;">
                     
-                    <div style="width: 10px;"></div><!-- スペーサー -->
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <label style="font-weight:600;">🏆 大会名:</label>
+                        <input type="text" id="quiz-title-input" placeholder="大会名を入力" style="font-family: 'Outfit', 'Noto Sans JP', sans-serif; font-size: 1.1rem; padding: 10px 15px; border-radius: 12px; border: none; background: var(--md-sys-color-surface-container-highest); color: var(--md-sys-color-on-surface); outline: none; width: 100%; min-width: 0; box-sizing: border-box; font-weight: 700;" onchange="updateQuizTitle(this.value)">
+                    </div>
     
-                    <label style="font-weight:600;">👤 表示人数:</label>
-                    <select id="bulk-count" class="count-selector" onchange="changePlayerCount(this.value)">
-                        <option value="2">2人</option>
-                        <option value="3">3人</option>
-                        <option value="4" selected>4人</option>
-                        <option value="5">5人</option>
-                        <option value="6">6人</option>
-                        <option value="7">7人</option>
-                        <option value="8">8人</option>
-                        <option value="9">9人</option>
-                        <option value="10">10人</option>
-                        <option value="11">11人</option>
-                        <option value="12">12人</option>
-                    </select>
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <label style="font-weight:600;">👤 表示人数:</label>
+                            <select id="bulk-count" class="count-selector" onchange="changePlayerCount(this.value)">
+                                <option value="2">2人</option>
+                                <option value="3">3人</option>
+                                <option value="4" selected>4人</option>
+                                <option value="5">5人</option>
+                                <option value="6">6人</option>
+                                <option value="7">7人</option>
+                                <option value="8">8人</option>
+                                <option value="9">9人</option>
+                                <option value="10">10人</option>
+                                <option value="11">11人</option>
+                                <option value="12">12人</option>
+                            </select>
+                        </div>
+                        <label style="font-weight:600; display:flex; align-items:center; gap: 5px; cursor:pointer;" onclick="document.getElementById('controls').classList.toggle('hide-queue-order', !this.querySelector('input').checked)">
+                            <input type="checkbox" id="toggle-queue-order" checked> 順番表示
+                        </label>
+                    </div>
 
-                    <label style="font-weight:600; display:flex; align-items:center; gap: 5px; cursor:pointer;" onclick="document.getElementById('controls').classList.toggle('hide-queue-order', !this.querySelector('input').checked)">
-                        <input type="checkbox" id="toggle-queue-order" checked> 順番表示
-                    </label>
-
-                    <button class="btn-action" style="margin-left: auto; display: flex; align-items: center; gap: 6px; background: var(--md-sys-color-tertiary); color: var(--md-sys-color-on-tertiary);" onclick="sendAction('forceSync')">
+                    <button class="btn-action" style="width: 100%; display: flex; justify-content: center; align-items: center; gap: 6px; background: var(--md-sys-color-tertiary); color: var(--md-sys-color-on-tertiary);" onclick="sendAction('forceSync')">
                         <span class="material-symbols-rounded">sync</span> 状態をホストに強制同期
                     </button>
                 </div>

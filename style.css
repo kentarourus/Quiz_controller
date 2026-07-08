@@ -386,7 +386,7 @@ body.light-mode .header-display {
         padding: 10px;
     }
     .global-controls {
-        width: 320px;
+        width: 260px; /* Reduced to allow more space for the grid */
         height: calc(100vh - 20px);
         overflow-y: auto;
         margin-bottom: 0;
@@ -396,7 +396,20 @@ body.light-mode .header-display {
         flex: 1;
         height: calc(100vh - 20px);
         padding-bottom: 15px;
+        grid-template-columns: repeat(auto-fill, minmax(145px, 1fr)); /* Allow 3 cards to fit horizontally */
+        gap: 10px;
     }
+    
+    /* Compact the player cards */
+    .control-card { padding: 12px; }
+    .control-card .c-row { flex-direction: column; align-items: stretch; gap: 8px; margin-bottom: 10px; }
+    .control-card .p-title { gap: 8px; }
+    .control-card .p-title input[type="text"] { padding: 6px 10px; font-size: 1.1rem; }
+    .control-card .btn-big { padding: 10px 5px; font-size: 1.2rem; }
+    .control-card .score-adjuster-container { flex-direction: column; gap: 8px; }
+    .control-card .score-adjuster { justify-content: center; }
+    .control-card .score-disp { font-size: 1.5rem; min-width: 35px; }
+    .control-card .step-btn { width: 32px; height: 32px; font-size: 1.2rem; }
 }
 
 /* --- 10 UX Improvements Added Styles --- */

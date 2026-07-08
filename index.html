@@ -9,7 +9,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <!-- Include Custom Stylesheet -->
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,600,0,0" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css?v=39">
+    <link rel="stylesheet" href="style.css?v=40">
 </head>
 <body>
 
@@ -129,24 +129,24 @@
                     </button>
                 </div>
             
-            <div class="control-row" style="justify-content: space-between;">
+            <div class="control-row" style="flex-direction: column; align-items: stretch; gap: 10px;">
                 <!-- 音声系グループ -->
-                <div style="display: flex; gap: 15px;">
-                    <button class="btn-action btn-sound-m" onclick="sendAction('playSound', 'maru')">🔊 ピンポン</button>
-                    <button class="btn-action btn-sound-b" onclick="sendAction('playSound', 'batsu')">🔊 ブー</button>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <button class="btn-action btn-sound-m" onclick="sendAction('playSound', 'maru')" style="width: 100%;">🔊 ピンポン</button>
+                    <button class="btn-action btn-sound-b" onclick="sendAction('playSound', 'batsu')" style="width: 100%;">🔊 ブー</button>
                 </div>
                 
                 <!-- 進行系グループ -->
-                <div style="display: flex; gap: 15px;">
-                    <button class="btn-action btn-reset" onclick="sendAction('resetAll')">🔄 全リセット</button>
+                <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 5px;">
+                    <button class="btn-action btn-reset" onclick="sendAction('resetAll')" style="width: 100%;">🔄 全リセット</button>
                 </div>
             </div>
             
-            <div style="display: flex; gap: 15px; margin-top: 10px;">
-                  <button class="btn-massive-reset" style="background: var(--md-sys-color-secondary); color: var(--md-sys-color-on-secondary);" onclick="sendAction('passBuzzer')">
+            <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 15px;">
+                  <button class="btn-massive-reset" style="background: var(--md-sys-color-secondary); color: var(--md-sys-color-on-secondary); padding: 20px;" onclick="sendAction('passBuzzer')">
                       ⏭ 次の人へ
                   </button>
-                  <button class="btn-massive-reset" onclick="sendAction('resetBuzzer')">
+                  <button class="btn-massive-reset" style="padding: 20px;" onclick="sendAction('resetBuzzer')">
                       🛑 全員リセット
                   </button>
               </div>

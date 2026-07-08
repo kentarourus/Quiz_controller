@@ -416,10 +416,16 @@ function renderControls() {
                         <input type="text" id="input-name-${p.id}" value="${p.name}" onchange="updatePlayer(${i}, 'name', this.value)" placeholder="名前">
                     </div>
                 </div>
-                <div class="c-row" style="gap: 15px;">
-                    <button class="btn-big c-btn-m" onclick="sendAction('playSound','maru'); updatePlayer(${i},'score',gameState[${i}].score+1)">○正解</button> 
-                    <button class="btn-big c-btn-b" onclick="sendAction('playSound','batsu'); updatePlayer(${i},'penalty',gameState[${i}].penalty+1)">✕誤答</button>
-                </div>
+                  <div class="c-row" style="gap: 15px;">
+                      <button class="btn-big c-btn-m" onclick="sendAction('playSound','maru'); updatePlayer(${i},'score',gameState[${i}].score+1)" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 12px 5px;">
+                          <span style="font-size: 2.4rem; font-weight: 900; line-height: 1;">○</span>
+                          <span style="font-size: 0.9rem;">正解</span>
+                      </button> 
+                      <button class="btn-big c-btn-b" onclick="sendAction('playSound','batsu'); updatePlayer(${i},'penalty',gameState[${i}].penalty+1)" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 12px 5px;">
+                          <span style="font-size: 2.4rem; font-weight: 900; line-height: 1;">✕</span>
+                          <span style="font-size: 0.9rem;">誤答</span>
+                      </button>
+                  </div>
                 <div class="score-adjuster-container">
                     <div class="score-adjuster">
                         <span class="score-adjuster-label" style="color: var(--success);">○</span>

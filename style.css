@@ -378,6 +378,27 @@ body.light-mode .header-display {
     .btn-big { width: 100%; margin-bottom: 10px; }
 }
 
+/* Landscape mode for mobile/short screens (Controller) */
+@media (max-height: 600px) and (orientation: landscape) {
+    #controller-mode {
+        flex-direction: row;
+        gap: 15px;
+        padding: 10px;
+    }
+    .global-controls {
+        width: 320px;
+        height: calc(100vh - 20px);
+        overflow-y: auto;
+        margin-bottom: 0;
+        padding: 15px;
+    }
+    .grid {
+        flex: 1;
+        height: calc(100vh - 20px);
+        padding-bottom: 15px;
+    }
+}
+
 /* --- 10 UX Improvements Added Styles --- */
 
 /* Nav Buttons placed in Header */

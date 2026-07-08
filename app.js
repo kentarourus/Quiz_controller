@@ -350,7 +350,7 @@ function connectToDisplay() {
 
     conn.on('open', () => {
         document.getElementById('setup').style.display = 'none';
-        document.getElementById('global-controls').style.display = 'block';
+        document.getElementById('global-controls').style.display = 'flex';
         document.getElementById('controls').style.display = 'grid';
     });
     

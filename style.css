@@ -317,9 +317,9 @@ body.light-mode .header-display {
 .btn-sound-b { background-color: var(--md-sys-color-error-container); color: var(--md-sys-color-on-error-container); }
 .btn-action[onclick*="resetBuzzer"] { background-color: var(--md-sys-color-primary-container) !important; color: var(--md-sys-color-on-primary-container) !important; }
 
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; display: none; flex-grow: 1; overflow-y: auto; padding-bottom: 30px; align-content: flex-start; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; display: none; flex-grow: 1; overflow-y: auto; padding-bottom: 30px; }
 
-.control-card { padding: 25px; border-radius: var(--md-sys-shape-corner-extra-large); background: var(--md-sys-color-surface-container); transition: all 0.3s; position: relative; overflow: hidden; box-shadow: var(--md-sys-elevation-1); }
+.control-card { padding: 25px; border-radius: var(--md-sys-shape-corner-extra-large); background: var(--md-sys-color-surface-container); transition: all 0.3s; position: relative; overflow: hidden; box-shadow: var(--md-sys-elevation-1); min-height: min-content; }
 .control-card:hover { box-shadow: var(--md-sys-elevation-2); transform: translateY(-2px); }
 .active-player { 
     background: var(--card-bg);

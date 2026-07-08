@@ -294,7 +294,7 @@ body.light-mode .header-display {
 
 .buzzer-winner-controller { border: 3px solid var(--md-sys-color-primary) !important; transform: scale(1.02); z-index: 10; box-shadow: var(--md-sys-elevation-3) !important; }
 
-#controller-mode { display: none; padding: 15px; max-width: 1200px; margin: 0 auto; height: 100vh; flex-direction: column; overflow: hidden; }
+#controller-mode { display: none; padding: 15px; max-width: 1200px; margin: 0 auto; min-height: 100vh; height: auto; flex-direction: column; overflow: visible; }
 .setup-area { padding: 40px 20px; text-align: center; margin-bottom: 20px; background: var(--md-sys-color-surface-container); border-radius: var(--md-sys-shape-corner-extra-large); box-shadow: var(--md-sys-elevation-2); }
 .setup-area h2 { margin-bottom: 20px; font-weight: 700; font-size: 1.8rem; }
 .setup-area input { font-family: 'Outfit', sans-serif; font-size: 2rem; padding: 20px; width: 100%; max-width: 320px; text-align: center; background: var(--md-sys-color-surface-container-lowest); border: 2px solid var(--md-sys-color-primary); color: var(--md-sys-color-on-surface); border-radius: 16px; margin-bottom: 25px; outline: none; transition: all 0.3s; font-weight: 800; letter-spacing: 5px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
@@ -317,7 +317,7 @@ body.light-mode .header-display {
 .btn-sound-b { background-color: var(--md-sys-color-error-container); color: var(--md-sys-color-on-error-container); }
 .btn-action[onclick*="resetBuzzer"] { background-color: var(--md-sys-color-primary-container) !important; color: var(--md-sys-color-on-primary-container) !important; }
 
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); grid-auto-rows: max-content; gap: 20px; display: none; flex-grow: 1; overflow-y: auto; padding-bottom: 30px; align-content: start; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); grid-auto-rows: max-content; gap: 20px; display: none; flex-grow: 1; overflow: visible; padding-bottom: 30px; align-content: start; }
 
 .control-card { padding: 25px; border-radius: var(--md-sys-shape-corner-extra-large); background: var(--md-sys-color-surface-container); transition: all 0.3s; position: relative; overflow: hidden; box-shadow: var(--md-sys-elevation-1); min-height: min-content; }
 .control-card:hover { box-shadow: var(--md-sys-elevation-2); transform: translateY(-2px); }
@@ -385,6 +385,8 @@ body.light-mode .header-display {
         gap: 40px;
         padding: 20px;
         max-width: 100%; /* Use full screen width */
+        height: 100vh;
+        overflow: hidden;
     }
     .global-controls {
         width: 280px; /* Reduced width to remove wasted horizontal space */
@@ -410,6 +412,7 @@ body.light-mode .header-display {
         padding-bottom: 20px;
         grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); /* Fit about 3-4 cards horizontally on PC */
         gap: 15px;
+        overflow-y: auto;
     }
     
     /* Remove wasted space in player cards */

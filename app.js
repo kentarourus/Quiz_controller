@@ -194,8 +194,8 @@ function startDisplayMode() {
                     broadcastState();
                 } else if (data.type === 'buzz') {
                     const pState = gameState.find(p => p.id === data.playerId);
-                    if (pState && pState.status === 'active' && !buzzerState.queue.includes(data.playerId)) {
-                        buzzerState.queue.push(data.playerId);
+                    if (pState && pState.status === 'active' && !buzzerState.queue.find(q => q.id === data.playerId)) {
+                        buzzerState.queue.push({ id: data.playerId, time: Date.now() });
                         
                         if (buzzerState.queue.length === 1) {
                             buzzerState.active = true;
@@ -248,7 +248,8 @@ function renderBoard() {
     // Instead of completely re-rendering, update existing cards if possible to preserve animations
     activePlayers.forEach(p => {
         let card = document.getElementById(`player-card-${p.id}`);
-        const queueIndex = buzzerState.queue.indexOf(p.id);
+        const queueEntry = buzzerState.queue.find(q => q.id === p.id);
+        const queueIndex = queueEntry ? buzzerState.queue.indexOf(queueEntry) : -1;
         const isBuzzerActive = buzzerState.active && queueIndex === buzzerState.currentIndex;
         const isQueued = queueIndex !== -1;
         
@@ -258,7 +259,7 @@ function renderBoard() {
             card.className = `player-card ${p.status} player-color-${p.id} ${isBuzzerActive ? 'buzzer-winner' : ''}`;
             card.innerHTML = `
                 ${p.status === 'eliminated' ? '<div class="eliminated-badge">脱落</div>' : ''}
-                ${isQueued ? `<div class="rank-badge">${queueIndex + 1}</div>` : ''}
+                ${isQueued ? `<div class="rank-badge">${queueIndex + 1}${queueIndex > 0 ? `<div class="delta-badge">+${((queueEntry.time - buzzerState.queue[0].time) / 1000).toFixed(2)}s</div>` : ''}</div>` : ''}
                 <div class="player-name">${p.name}</div>
                 <div class="score-area">
                     <div class="score-box">
@@ -289,8 +290,9 @@ function renderBoard() {
             
             let rankBadge = card.querySelector('.rank-badge');
             if (isQueued) {
-                if (!rankBadge) card.insertAdjacentHTML('afterbegin', `<div class="rank-badge">${queueIndex + 1}</div>`);
-                else rankBadge.innerText = queueIndex + 1;
+                const deltaHtml = queueIndex > 0 ? `<div class="delta-badge">+${((queueEntry.time - buzzerState.queue[0].time) / 1000).toFixed(2)}s</div>` : '';
+                if (!rankBadge) card.insertAdjacentHTML('afterbegin', `<div class="rank-badge">${queueIndex + 1}${deltaHtml}</div>`);
+                else rankBadge.innerHTML = `${queueIndex + 1}${deltaHtml}`;
             } else {
                 if (rankBadge) rankBadge.remove();
             }
@@ -386,7 +388,8 @@ function renderControls() {
     
     gameState.forEach((p, i) => {
         let card = document.getElementById(`control-card-${p.id}`);
-        const queueIndex = buzzerState.queue.indexOf(p.id);
+        const queueEntry = buzzerState.queue.find(q => q.id === p.id);
+        const queueIndex = queueEntry ? buzzerState.queue.indexOf(queueEntry) : -1;
         const isBuzzerActive = buzzerState.active && queueIndex === buzzerState.currentIndex;
         const isQueued = queueIndex !== -1;
         const baseClass = `control-card ${p.active ? 'active-player' : ''} ${isBuzzerActive ? 'buzzer-winner-controller' : ''} player-color-${p.id}`;
@@ -397,7 +400,7 @@ function renderControls() {
             card.className = baseClass;
             card.innerHTML = `
                 ${isBuzzerActive ? '<div class="controller-winner-badge">回答権！</div>' : ''}
-                ${isQueued ? `<div class="rank-badge">${queueIndex + 1}</div>` : ''}
+                ${isQueued ? `<div class="rank-badge">${queueIndex + 1}${queueIndex > 0 ? `<div class="delta-badge">+${((queueEntry.time - buzzerState.queue[0].time) / 1000).toFixed(2)}s</div>` : ''}</div>` : ''}
                 <div class="c-row">
                     <div class="p-title">
                         <input type="checkbox" id="chk-active-${p.id}" onchange="updatePlayer(${i}, 'active', this.checked)" ${p.active ? 'checked' : ''}>
@@ -460,8 +463,9 @@ function renderControls() {
             
             let rankBadge = card.querySelector('.rank-badge');
             if (isQueued) {
-                if (!rankBadge) card.insertAdjacentHTML('afterbegin', `<div class="rank-badge">${queueIndex + 1}</div>`);
-                else rankBadge.innerText = queueIndex + 1;
+                const deltaHtml = queueIndex > 0 ? `<div class="delta-badge">+${((queueEntry.time - buzzerState.queue[0].time) / 1000).toFixed(2)}s</div>` : '';
+                if (!rankBadge) card.insertAdjacentHTML('afterbegin', `<div class="rank-badge">${queueIndex + 1}${deltaHtml}</div>`);
+                else rankBadge.innerHTML = `${queueIndex + 1}${deltaHtml}`;
             } else {
                 if (rankBadge) rankBadge.remove();
             }

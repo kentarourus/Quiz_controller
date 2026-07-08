@@ -46,13 +46,12 @@ function connectToHost() {
     conn.on('open', () => {
         document.getElementById('setup-screen').style.display = 'none';
         document.getElementById('buzzer-screen').style.display = 'flex';
-        updateBuzzerUI(false, null);
+        updateBuzzerUI({ active: false, queue: [] });
     });
     
     conn.on('data', (data) => {
         if (data.type === 'buzzerState') {
-            const winnerId = data.state.active && data.state.queue ? data.state.queue[data.state.currentIndex] : null;
-            updateBuzzerUI(data.state.active, winnerId);
+            updateBuzzerUI(data.state);
         }
     });
     
@@ -70,17 +69,25 @@ function connectToHost() {
     });
 }
 
-function updateBuzzerUI(isLocked, winnerId) {
+function updateBuzzerUI(buzzerState) {
     const btn = document.getElementById('buzzer-btn');
     const statusText = document.getElementById('status-text');
     const overlay = document.getElementById('win-overlay');
     
-    if (isLocked) {
+    // Check if I am in the queue
+    const queueEntry = buzzerState && buzzerState.queue ? buzzerState.queue.find(q => q.id === myPlayerId) : null;
+    const isQueued = !!queueEntry;
+    const queueIndex = isQueued ? buzzerState.queue.indexOf(queueEntry) : -1;
+    
+    const activeWinnerEntry = buzzerState && buzzerState.active && buzzerState.queue ? buzzerState.queue[buzzerState.currentIndex] : null;
+    const isWinner = activeWinnerEntry && activeWinnerEntry.id === myPlayerId;
+    
+    if (isQueued) {
         myBuzzerActive = false;
         btn.classList.add('locked');
         btn.classList.remove('winner');
         
-        if (winnerId === myPlayerId) {
+        if (isWinner) {
             btn.classList.remove('locked');
             btn.classList.add('winner');
             btn.innerHTML = "<div style='font-size: 0.5em; line-height: 1.2;'>🎉<br>あなたが<br>回答者です！</div>";
@@ -95,8 +102,12 @@ function updateBuzzerUI(isLocked, winnerId) {
                 document.body.style.backgroundColor = originalBg;
             }, 150);
         } else {
-            btn.innerText = "❌ ロック中";
-            statusText.innerText = `Player ${winnerId + 1} が解答権を獲得`;
+            btn.innerHTML = `<div style='font-size: 0.8em;'>順番待ち<br>${queueIndex + 1}番目</div>`;
+            if (activeWinnerEntry) {
+                statusText.innerText = `Player ${activeWinnerEntry.id + 1} が解答権を獲得 (あなたは ${queueIndex + 1}番目)`;
+            } else {
+                statusText.innerText = `順番待ち (${queueIndex + 1}番目)`;
+            }
             overlay.style.display = 'none';
         }
     } else {
@@ -104,7 +115,12 @@ function updateBuzzerUI(isLocked, winnerId) {
         btn.classList.remove('locked');
         btn.classList.remove('winner');
         btn.innerText = "PUSH";
-        statusText.innerText = "早押し準備OK！";
+        
+        if (activeWinnerEntry) {
+            statusText.innerText = `Player ${activeWinnerEntry.id + 1} が解答中`;
+        } else {
+            statusText.innerText = "早押しボタンを押してください";
+        }
         overlay.style.display = 'none';
     }
 }

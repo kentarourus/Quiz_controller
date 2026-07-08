@@ -9,7 +9,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <!-- Include Custom Stylesheet -->
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,600,0,0" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css?v=31">
+    <link rel="stylesheet" href="style.css?v=32">
 </head>
 <body>
 
@@ -119,6 +119,10 @@
                         <option value="11">11人</option>
                         <option value="12">12人</option>
                     </select>
+
+                    <label style="font-weight:600; display:flex; align-items:center; gap: 5px; cursor:pointer;" onclick="document.getElementById('controls').classList.toggle('hide-queue-order', !this.querySelector('input').checked)">
+                        <input type="checkbox" id="toggle-queue-order" checked> 順番表示
+                    </label>
 
                     <button class="btn-action" style="margin-left: auto; display: flex; align-items: center; gap: 6px; background: var(--md-sys-color-tertiary); color: var(--md-sys-color-on-tertiary);" onclick="sendAction('forceSync')">
                         <span class="material-symbols-rounded">sync</span> 状態をホストに強制同期

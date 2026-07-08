@@ -390,7 +390,18 @@ body.light-mode .header-display {
         height: calc(100vh - 40px);
         overflow-y: auto;
         margin-bottom: 0;
-        padding: 20px;
+        padding: 15px; /* Reduced padding to give buttons more horizontal room */
+    }
+    
+    /* Prevent buttons in left panel from wrapping */
+    .global-controls button {
+        white-space: nowrap;
+    }
+    .global-controls .btn-action {
+        font-size: 1.1rem; /* Slightly smaller to fit without wrapping */
+    }
+    .global-controls .btn-massive-reset {
+        font-size: 1.4rem; /* Scaled down to prevent text wrap on 280px wide panel */
     }
     .grid {
         flex: 1;
